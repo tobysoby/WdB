@@ -22,22 +22,67 @@
         <meta charset="utf-8" />
         <meta name="format-detection" content="telephone=no" />
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Hello World</title>
     </head>
     <body>
         <div class="app">
-            <h1>PhoneGap</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
+            
+        <div id="sidebar">
+            <div id="search">
+                <input type="text" placeholder="Suchbegriff" id="search-input">
+                </div>
+            <div id="search-result">
+            <ul>
+                </ul>
+                </div>
+            <div id="sidebarnav">
+            <ul class="sidebarnav">
+            <li>
+                <a class="categories" href="#"></a></li>
+            <li>
+                <a class="bookmarks" alt="Bookmarks" href=# ><ul class="popupmenu"></ul></a>
+                </li>
+            <li>
+                <a class="history" href=# ></a></li></ul>
             </div>
+            </div>
+        <div id="main">
+             <div id="bookmark"></div>
+             <div id="bookmarked"></div>
+            <div id="article">
+                <h1 class="lemma">Überschrift Artikel</h1>
+               <p class="lemmazusatz">Lemma Zusatz</p>
+                <p class="bedeutung">Bedeutung</p>
+                <p class="abbildung">Abbildung</p>
+                </div>
+            <div id="mainnav">
+                <ul class="mainnav">
+            <li>
+                <a class="back" href="#"></a></li>
+            <li>
+                <a class="forward" href=# ></a></li>
+            <li>
+                <a class="graph" href=# ></a></li>
+                <li>
+                <a class="print" href=# ></a></li>
+                <li>
+                <a class="comment" href=# ></a></li></ul>
+            </div>
+            
+            </div>
+            
+            
+            
         </div>
-        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="js/cordova.js"></script>
+        <script type="text/javascript" src="js/jquery-1.11.0.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/code.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
-            app.initialize();
+ //           app.initialize();
         </script>
     </body>
 </html>
