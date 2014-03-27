@@ -1,72 +1,24 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-/*
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicity call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+/*jslint browser:true */
+/*jslint node: true */
+/*global $, jQuery, alert*/
+"use strict";
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
+//Artikel suchen
+function artikelSuchen() {
+    var parameter, eingabe = $("#search-input").val();
+    if (eingabe !== "") {
+        parameter = eingabe;
     }
-};
-*/
-
- //Artikel suchen
-function artikelSuchen () {
-        var parameter, eingabe = $("#search-input").val();
-        if (eingabe !== "") {
-            parameter = eingabe;
-        } 
-        if (eingabe == "") {
-        }
-        getArticle(parameter);
-    };
-
+    if (eingabe == "") {
+        //schreibe: Unpassender Suchbegriff
+    }
+    getArticle(parameter);
+}
 $("#artikel_suchen").click(function () {
     artikelSuchen();
 });
-
-$("#search-input").keyup(function(event){
-    if(event.keyCode == 13){
+$("#search-input").keyup(function (event) {
+    if (event.keyCode == 13) {
         artikelSuchen();
     }
 });
@@ -83,6 +35,7 @@ var unbookmarkArticle = function (lemma) {
 //Artikel anzeigen
 var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
     $('h1.lemma').html(lemma);
+    addToHistory(lemma);
     $('#article .lemmazusatz').html(l_zusatz);
     $('#article .bedeutung').html(bedeutung);
     if (abbildung_src != null) {
@@ -90,30 +43,16 @@ var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
     } else {
         $('#article .abbildung').empty();
     }
-    var bookmarked_bool;
-    bookmarked_bool = window.localStorage.getItem(lemma);
+    var bookmarked_bool = window.localStorage.getItem(lemma);
     if (bookmarked_bool === "bookmarked") {
-        //$("#bookmark").empty();
-        $("#bookmarked").html("Bookmarked");
-        /*$("#bookmarked").click(function() {
-            unbookmarkArticle(id);
-            $("#bookmarked").empty();
-            $("#bookmark").html("Bookmark");
-        });*/
-    }
-    if (bookmarked_bool !== "bookmarked") {
-        //$("#bookmarked").empty();
-        $("#bookmarked").html("Bookmark");
-        /*$("#bookmark").click(function() {
-            bookmarkArticle(id);
-            $("#bookmark").empty();
-            $("#bookmarked").html("Bookmarked");
-        });*/
+        $("#bookmark").html("Bookmark");
+    } else {
+        $("#bookmark").html("Bookmarked");
     }
 };
 
 //Bookmark-Eventhandler
-$("#bookmarked").click(function() {
+$("#bookmarked").click(function () {
     var bookmarked_bool, aktuelles_lemma;
     aktuelles_lemma = $('.lemma').html();
     bookmarked_bool = window.localStorage.getItem(aktuelles_lemma);
@@ -124,7 +63,7 @@ $("#bookmarked").click(function() {
         bookmarkArticle(aktuelles_lemma);
         $("#bookmark").html("Bookmarked");
     }
-    });
+});
 
 var showMoreArticles = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
     $('<div></div>').html('Artikel-ID: ' + id + '<br/>' + 'Lemma: ' + lemma + '</br>' + 'l_zusatz: ' + l_zusatz + '</br>' + bedeutung + '</br>').appendTo('#weitere_Artikel');
@@ -217,20 +156,28 @@ function getArticle(parameter) {
 // Bookmarks anzeigen lassen
 function showBookmarks() {
     var i, para3, para3_wert, y, htmlstring;
-    $('.popupmenu').empty();
-    $('.popupmenu').css('display', 'block');
+    $('.popup_bookmarks').empty();
+    $('.popup_bookmarks').css('display', 'block');
     for (i = 0; i < localStorage.length; i++) {
         para3 = localStorage.key(i);
         para3_wert = localStorage.getItem(para3);
         if (para3_wert === 'bookmarked') {
-            htmlstring = $('.popupmenu').html();
-            $('.popupmenu').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + para3 + "\"); return false;'>" + para3 + "</a></li>");
+            htmlstring = $('.popup_bookmarks').html();
+            $('.popup_bookmarks').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + para3 + "\"); return false;'>" + para3 + "</a></li>");
         }
     }
 }
-$('.bookmarks').click(function(){
-    showBookmarks();
-    return false;
+$('.bookmarks').click(function () {
+    var para1;
+    para1 = $('.popup_bookmarks').css('display');
+    if (para1 == 'none') {
+        showBookmarks();
+        return false;
+    }
+    if (para1 == 'block') {
+        $('.popup_bookmarks').css('display', 'none');
+    }
+    
 });
 
 //Autosuggest
@@ -259,13 +206,85 @@ $('#search-input').autocomplete({
         getArticle(ui.label);
     }
 });
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
+//History
+function addToHistory(lemma) {
+    var eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn;
+    var hist = new Array ();
+    hist[1] = window.localStorage.getItem('hist_eins');
+    window.localStorage.setItem('hist_eins', lemma);
+    hist[2] = window.localStorage.getItem('hist_zwei');
+    window.localStorage.setItem('hist_zwei', hist[1]);
+    hist[3] = window.localStorage.getItem('hist_drei');
+    window.localStorage.setItem('hist_drei', hist[2]);
+    hist[4] = window.localStorage.getItem('hist_vier');
+    window.localStorage.setItem('hist_vier', hist[3]);
+    hist[5] = window.localStorage.getItem('hist_fünf');
+    window.localStorage.setItem('hist_fünf', hist[4]);
+    hist[6] = window.localStorage.getItem('hist_sechs');
+    window.localStorage.setItem('hist_sechs', hist[5]);
+    hist[7] = window.localStorage.getItem('hist_sieben');
+    window.localStorage.setItem('hist_sieben', hist[6]);
+    hist[8] = window.localStorage.getItem('hist_acht');
+    window.localStorage.setItem('hist_acht', hist[7]);
+    hist[9] = window.localStorage.getItem('hist_neun');
+    window.localStorage.setItem('hist_neun', hist[8]);
+    hist[10] = window.localStorage.getItem('hist_zehn');
+    window.localStorage.setItem('hist_zehn', hist[9]);
+    return false;
+    
+    /*//window.localStorage.setItem('hist_eins', lemma);
+   //window.localStorage.setItem('hist_zwei', eins);
+    window.localStorage.setItem('hist_drei', zwei);
+    window.localStorage.setItem('hist_vier', drei);
+    window.localStorage.setItem('hist_fünf', vier);
+    window.localStorage.setItem('hist_sechs', fünf);
+    window.localStorage.setItem('hist_sieben', sechs);
+    window.localStorage.setItem('hist_acht', sieben);
+    window.localStorage.setItem('hist_neun', acht);
+    window.localStorage.setItem('hist_zehn', neun);*/
+}
+
+function showHistory() {
+    var eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn;
+    var hist = new Array ();
+    var htmlstring, i;
+    $('.popup_history').css('display', 'block');
+    hist[1] = window.localStorage.getItem('hist_eins');
+    hist[2] = window.localStorage.getItem('hist_zwei');
+    hist[3] = window.localStorage.getItem('hist_drei');
+    hist[4] = window.localStorage.getItem('hist_vier');
+    hist[5] = window.localStorage.getItem('hist_fünf');
+    hist[6] = window.localStorage.getItem('hist_sechs');
+    hist[7] = window.localStorage.getItem('hist_sieben');
+    hist[8] = window.localStorage.getItem('hist_acht');
+    hist[9] = window.localStorage.getItem('hist_neun');
+    hist[10] = window.localStorage.getItem('hist_zehn');
+    
+    $('.popup_history').html('Die letzten 10 aufgerufenen Artikel');
+    for (i = 0; i < hist.length; i++) {
+        htmlstring = $('.popup_history').html();
+        $('.popup_history').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + hist[i] + "\"); return false;'>" + hist[i] + "</a></li>");
+    }
+}
+
+$('.history').click(function () {
+    var para1;
+    para1 = $('.popup_history').css('display');
+    if (para1 == 'none') {
+        showHistory();
+        return false;
+    }
+    if (para1 == 'block') {
+        $('.popup_history').css('display', 'none');
+    }
+    
+});
+    
+/*Todo
+- Notizen
+- History: 
+- weiterspringen (Artikel vor, Artikel zurück)
+- Kategorien
+- Fehlermeldungen
+*/
