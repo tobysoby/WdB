@@ -198,7 +198,7 @@ function articlesInArray() {
         });
     });
 }
-window.onload = articlesInArray;
+window.onload = articlesInArray ();
 
 $('#search-input').autocomplete({
     source: lemmata,
