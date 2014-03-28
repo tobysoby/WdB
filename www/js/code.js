@@ -209,20 +209,21 @@ $('#search-input').autocomplete({
 
 //History
 function addToHistory(lemma) {
-    var i, history;
+    var i, history, hist_time;
+    hist_time = new Date();
     history = store.get('hist');
-    history.unshift(lemma);
-    store.set('hist', history);    
+    history.unshift({hist_lemm: lemma, hist_time: hist_time});
+    store.set('hist', history);
 }
 function showHistory() {
-    var history = new Array (), htmlstring, i;
+    var history, htmlstring, i, hist_lemm, hist_time;
     $('.popup_history').css('display', 'block');
     history = store.get('hist');
     $('.popup_history').html('Die letzten 10 aufgerufenen Artikel');
-    for (i = 0; i < 20; i = i+2) {
+    for (i = 0; i < 20; i = i + 2) {
         htmlstring = $('.popup_history').html();
         if (history[i] != 'nix') {
-            $('.popup_history').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + history[i] + "\"); return false;'>" + history[i] + "</a></li>");
+            $('.popup_history').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + history[i].hist_lemm + "\"); return false;'>" + history[i].hist_lemm + "</a><br/>" + history[i].hist_time + "</li>");
         }
     }
 }
@@ -235,15 +236,14 @@ $('.history').click(function () {
     }
     if (para1 == 'block') {
         $('.popup_history').css('display', 'none');
-    }   
+    }
 });
-
 //checke if schon eine history besteht, und wie lange die ist
-function historyCheck () {
+function historyCheck() {
     var history = new Array ();
     history = store.get('hist');
     if (history == null) {
-        history = ['nix', 'nix','nix','nix','nix','nix','nix','nix','nix','nix', 'nix','nix','nix','nix','nix','nix','nix','nix','nix','nix'];
+        history = ['nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix',  'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix'];
         store.set('hist', history);
     }
 }
