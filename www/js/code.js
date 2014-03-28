@@ -212,6 +212,9 @@ function addToHistory(lemma) {
     var i, history, hist_time;
     hist_time = new Date();
     history = store.get('hist');
+    if (history.length = 999) { //Speicherlänge der History
+        history.pop();
+    }
     history.unshift({hist_lemm: lemma, hist_time: hist_time});
     store.set('hist', history);
 }
@@ -252,7 +255,7 @@ window.onload = historyCheck;
     
 /*Todo
 - Notizen
-- History: Mit Hack erledigt. Timestamp, 500 
+- History: Mit Hack erledigt. 
 - weiterspringen (Artikel vor, Artikel zurück)
 - Kategorien
 - Fehlermeldungen
