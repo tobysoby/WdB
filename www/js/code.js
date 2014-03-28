@@ -209,65 +209,23 @@ $('#search-input').autocomplete({
 
 //History
 function addToHistory(lemma) {
-    var eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn;
-    var hist = new Array ();
-    hist[1] = window.localStorage.getItem('hist_eins');
-    window.localStorage.setItem('hist_eins', lemma);
-    hist[2] = window.localStorage.getItem('hist_zwei');
-    window.localStorage.setItem('hist_zwei', hist[1]);
-    hist[3] = window.localStorage.getItem('hist_drei');
-    window.localStorage.setItem('hist_drei', hist[2]);
-    hist[4] = window.localStorage.getItem('hist_vier');
-    window.localStorage.setItem('hist_vier', hist[3]);
-    hist[5] = window.localStorage.getItem('hist_fünf');
-    window.localStorage.setItem('hist_fünf', hist[4]);
-    hist[6] = window.localStorage.getItem('hist_sechs');
-    window.localStorage.setItem('hist_sechs', hist[5]);
-    hist[7] = window.localStorage.getItem('hist_sieben');
-    window.localStorage.setItem('hist_sieben', hist[6]);
-    hist[8] = window.localStorage.getItem('hist_acht');
-    window.localStorage.setItem('hist_acht', hist[7]);
-    hist[9] = window.localStorage.getItem('hist_neun');
-    window.localStorage.setItem('hist_neun', hist[8]);
-    hist[10] = window.localStorage.getItem('hist_zehn');
-    window.localStorage.setItem('hist_zehn', hist[9]);
-    return false;
-    
-    /*//window.localStorage.setItem('hist_eins', lemma);
-   //window.localStorage.setItem('hist_zwei', eins);
-    window.localStorage.setItem('hist_drei', zwei);
-    window.localStorage.setItem('hist_vier', drei);
-    window.localStorage.setItem('hist_fünf', vier);
-    window.localStorage.setItem('hist_sechs', fünf);
-    window.localStorage.setItem('hist_sieben', sechs);
-    window.localStorage.setItem('hist_acht', sieben);
-    window.localStorage.setItem('hist_neun', acht);
-    window.localStorage.setItem('hist_zehn', neun);*/
+    var i, history;
+    history = store.get('hist');
+    history.unshift(lemma);
+    store.set('hist', history);    
 }
-
 function showHistory() {
-    var eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn;
-    var hist = new Array ();
-    var htmlstring, i;
+    var history = new Array (), htmlstring, i;
     $('.popup_history').css('display', 'block');
-    hist[1] = window.localStorage.getItem('hist_eins');
-    hist[2] = window.localStorage.getItem('hist_zwei');
-    hist[3] = window.localStorage.getItem('hist_drei');
-    hist[4] = window.localStorage.getItem('hist_vier');
-    hist[5] = window.localStorage.getItem('hist_fünf');
-    hist[6] = window.localStorage.getItem('hist_sechs');
-    hist[7] = window.localStorage.getItem('hist_sieben');
-    hist[8] = window.localStorage.getItem('hist_acht');
-    hist[9] = window.localStorage.getItem('hist_neun');
-    hist[10] = window.localStorage.getItem('hist_zehn');
-    
+    history = store.get('hist');
     $('.popup_history').html('Die letzten 10 aufgerufenen Artikel');
-    for (i = 0; i < hist.length; i++) {
+    for (i = 0; i < 20; i = i+2) {
         htmlstring = $('.popup_history').html();
-        $('.popup_history').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + hist[i] + "\"); return false;'>" + hist[i] + "</a></li>");
+        if (history[i] != 'nix') {
+            $('.popup_history').html(htmlstring + "<br/><li><a href='#' id='link' onclick='getArticle(\"" + history[i] + "\"); return false;'>" + history[i] + "</a></li>");
+        }
     }
 }
-
 $('.history').click(function () {
     var para1;
     para1 = $('.popup_history').css('display');
@@ -277,14 +235,26 @@ $('.history').click(function () {
     }
     if (para1 == 'block') {
         $('.popup_history').css('display', 'none');
-    }
-    
+    }   
 });
+
+//checke if schon eine history besteht, und wie lange die ist
+function historyCheck () {
+    var history = new Array ();
+    history = store.get('hist');
+    if (history == null) {
+        history = ['nix', 'nix','nix','nix','nix','nix','nix','nix','nix','nix', 'nix','nix','nix','nix','nix','nix','nix','nix','nix','nix'];
+        store.set('hist', history);
+    }
+}
+window.onload = historyCheck;
+    
     
 /*Todo
 - Notizen
-- History: 
+- History: Mit Hack erledigt. Timestamp, 500 
 - weiterspringen (Artikel vor, Artikel zurück)
 - Kategorien
 - Fehlermeldungen
+- Article of the day
 */
