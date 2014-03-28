@@ -38,6 +38,7 @@ var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
     addToHistory(lemma);
     $('#article .lemmazusatz').html(l_zusatz);
     $('#article .bedeutung').html(bedeutung);
+    $('#article .id').html(id);
     if (abbildung_src != null) {
         $('#article .abbildung').html("<img src=img/" + abbildung_src + ">");
     } else {
@@ -251,8 +252,35 @@ function historyCheck() {
     }
 }
 window.onload = historyCheck;
-    
-    
+
+//Comment
+function showComment() {
+    var id, comment, html;
+    $('.popup_comment').css('display', 'block');
+    id = $('.id').html();
+    comment = store.get(id);
+    $('.comments_textarea').attr('placeholder').text(comment);
+    html = $('.popup_comment').html();
+    $('.popup_comment').html(html + '<br/><br/><a href="" id="button_save_comment" onclick="saveComment(); return false;">Kommentar speichern</a>');
+}
+$('#button_comment').click(function () {
+    var para1;
+    para1 = $('.popup_comment').css('display');
+    if (para1 == 'none') {
+        showComment();
+        return false;
+    }
+    if (para1 == 'block') {
+        $('.popup_comment').css('display', 'none');
+    }
+});
+function saveComment() {
+    var id, comment;
+    id = $('.id').html();
+    comment = $('.comments_textarea').attr('placeholder').text();
+    store.set(id, comment);
+}
+
 /*Todo
 - Notizen
 - History: Mit Hack erledigt. 
@@ -260,4 +288,5 @@ window.onload = historyCheck;
 - Kategorien
 - Fehlermeldungen
 - Article of the day
+- Markierungen
 */

@@ -177,7 +177,7 @@ h1 {
     width: 170px;
 }
 #mainnav ul {
-    width: 100%;
+ 
 }
 
 li {
@@ -342,6 +342,13 @@ sidebarnav li {
     
 }
 
+.id {
+    display: none;
+    width: 420px;
+    text-align: left;
+    
+}
+
 .lemmazusatz {
     font-style: italic;
 }
@@ -372,4 +379,24 @@ sidebarnav li {
     border-radius: 10px;
     padding: 0 0 0 0;
         
+}
+
+.popup_comment {
+    display: none;
+    width: 400px;
+    height: 500px;
+    position: relative;
+    left: -360px;
+    background-color: #ffffff;
+    bottom: 504px;
+    overflow: auto;
+    border-radius: 10px;
+    padding: 0 0 0 0;
+        
+}
+
+.wysihtml5-textarea {
+    width: 400px;
+    border: none;
+
 }

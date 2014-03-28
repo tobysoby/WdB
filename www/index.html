@@ -53,6 +53,7 @@
              <div id="bookmarked"></div>
             <div id="article">
                 <h1 class="lemma">Überschrift Artikel</h1>
+                <p class="id">ID</p>
                <p class="lemmazusatz">Lemma Zusatz</p>
                 <p class="bedeutung">Bedeutung</p>
                 <p class="abbildung">Abbildung</p>
@@ -68,7 +69,11 @@
                 <li>
                 <a class="print" href=# ></a></li>
                 <li>
-                <a class="comment" href=# ></a></li></ul>
+                <a id="button_comment" class="comment" href=# >
+                    <ul class="popup_comment">
+                    <input id="comments_textarea" placeholder="Enter your text ..." autofocus></input>
+                    </ul>
+                    </a></li></ul>
             </div>
             
             </div>
@@ -80,6 +85,8 @@
         <script type="text/javascript" src="js/jquery-1.11.0.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
         <script type="text/javascript" src="js/store+json2.min.js"></script>
+        <script src="js/advanced.js"></script>
+        <script src="js/wysihtml5.js"></script>
         <script type="text/javascript" src="js/code.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
