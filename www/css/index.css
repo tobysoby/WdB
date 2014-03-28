@@ -319,7 +319,7 @@ sidebarnav li {
 #bookmark {
     height:115px;
     width: 60px;
-    /*background-image: url(img/bookmark_unpressed.png);*/
+    background-image: url(img/bookmark_unpressed.png);
     background-repeat: no-repeat;
     position: absolute;
     top:0px;
@@ -328,7 +328,7 @@ sidebarnav li {
 #bookmarked {
     height:115px;
     width: 60px;
-    /*background-image: url(img/bookmark_pressed.png);*/
+background-image: url(img/bookmark_pressed.png);
     background-repeat: no-repeat;
     position: absolute;
     top:0px;
@@ -382,21 +382,23 @@ sidebarnav li {
 }
 
 .popup_comment {
-    display: none;
+    display: block;
     width: 400px;
     height: 500px;
     position: relative;
-    left: -360px;
+    left: 120px;
     background-color: #ffffff;
-    bottom: 504px;
+    bottom: 561px;
     overflow: auto;
     border-radius: 10px;
     padding: 0 0 0 0;
         
 }
 
-.wysihtml5-textarea {
-    width: 400px;
-    border: none;
 
+#comments_textarea {
+    height: 400px;
+    width:300px;
+    margin: auto;
+    display: block;
 }

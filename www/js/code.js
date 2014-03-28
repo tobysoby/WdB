@@ -259,7 +259,7 @@ function showComment() {
     $('.popup_comment').css('display', 'block');
     id = $('.id').html();
     comment = store.get(id);
-    $('.comments_textarea').attr('placeholder').text(comment);
+    //$('.comments_textarea').attr('placeholder').text(comment);
     html = $('.popup_comment').html();
     $('.popup_comment').html(html + '<br/><br/><a href="" id="button_save_comment" onclick="saveComment(); return false;">Kommentar speichern</a>');
 }
