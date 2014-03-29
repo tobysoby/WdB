@@ -256,22 +256,22 @@ window.onload = historyCheck;
 //Comment
 function showComment() {
     var id, comment, html;
-    $('.popup_comment').css('display', 'block');
+    $('#popup_comment').css('display', 'block');
     id = $('.id').html();
     comment = store.get(id);
     //$('.comments_textarea').attr('placeholder').text(comment);
-    html = $('.popup_comment').html();
-    $('.popup_comment').html(html + '<br/><br/><a href="" id="button_save_comment" onclick="saveComment(); return false;">Kommentar speichern</a>');
+    html = $('#popup_comment').html();
+    $('#popup_comment').html(html + '<br/><br/><a href="" id="button_save_comment" onclick="saveComment(); return false;">Kommentar speichern</a>');
 }
 $('#button_comment').click(function () {
     var para1;
-    para1 = $('.popup_comment').css('display');
+    para1 = $('#popup_comment').css('display');
     if (para1 == 'none') {
         showComment();
         return false;
     }
     if (para1 == 'block') {
-        $('.popup_comment').css('display', 'none');
+        $('#popup_comment').css('display', 'none');
     }
 });
 function saveComment() {

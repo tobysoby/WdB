@@ -381,14 +381,14 @@ background-image: url(img/bookmark_pressed.png);
         
 }
 
-.popup_comment {
+#popup_comment {
     display: block;
-    width: 400px;
-    height: 500px;
+    width: 300px;
+    height: 400px;
     position: relative;
-    left: 120px;
+    left: 220px;
     background-color: #ffffff;
-    bottom: 561px;
+    bottom: 461px;
     overflow: auto;
     border-radius: 10px;
     padding: 0 0 0 0;
@@ -401,4 +401,54 @@ background-image: url(img/bookmark_pressed.png);
     width:300px;
     margin: auto;
     display: block;
+}
+
+.add_comment_button {
+    float:right;
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
+    text-align: center;
+    position: relative;
+    top: -40px;
+    padding: 5px 5px 0 0;
+    color: blue;
+}
+
+#popup_comment_headline {
+    margin: auto;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    padding-top: 10px;
+    position: relative;
+    font-size: 20px;
+    color: blue;
+
+    
+}
+
+#popup_comment_new_note {
+    display: none;
+}
+
+#comment_list li {
+    width: 100%;
+    margin-left: -20px;
+    padding-left: 0px;
+    float: left;
+    height: 20px;
+    padding-top: 10px;
+    border-bottom-color: grey;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+
+    
+    
+}
+
+#comment_list {
+    width: 250px;
+    display: block;
+    
 }
