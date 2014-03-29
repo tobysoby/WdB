@@ -295,7 +295,14 @@ function saveComment() {
     id = $('.id').html();
     comment = $('.comments_textarea').attr('placeholder').text();
     store.set(id, comment);
-}
+};
+function addComment() {
+    $('#popup_comment').css('display', 'none');
+    $('#popup_comment_new_note').css('display', 'block');
+};
+$('#add_comment_button').click(function () {
+    addComment();
+});
 
 /*Todo
 - Notizen

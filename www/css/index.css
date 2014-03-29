@@ -403,7 +403,7 @@ background-image: url(img/bookmark_pressed.png);
     display: block;
 }
 
-.add_comment_button {
+#add_comment_button {
     float:right;
     width: 30px;
     height: 30px;
