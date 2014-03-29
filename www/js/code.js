@@ -198,20 +198,23 @@ function articlesInArray() {
         });
     });
 }
-window.onload = articlesInArray ();
-/*window.onload = function() { //Random article bei Start
+window.onload = articlesInArray();
+/*$(document).ready(function () { //Random article bei Start: funkt net
     var lemmata_leng, random_num, random_article_title;
+    articlesInArray();
     lemmata_leng = lemmata.length;
-    random_num = Math.random() * (lemmata_leng - 1) + 1;
+    random_num = Math.floor(Math.random() * lemmata_leng + 1);
+    window.alert(random_num);
     random_article_title = lemmata[random_num];
-    getArticle(random_article);
-};*/
-/*window.onload = function() { //Letzter article bei Start
+    window.alert(random_article_title);
+    getArticle(random_article_title);
+});*/
+/*$(document).ready(function() { //Letzter article bei Start: funkt
     var last_article, history;
     history = store.get('hist');
-    last_article = history[1];
+    last_article = history[1].hist_lemm;
     getArticle(last_article);
-};*/
+});*/
 
 $('#search-input').autocomplete({
     source: lemmata,
@@ -226,7 +229,7 @@ function addToHistory(lemma) {
     var i, history, hist_time;
     hist_time = new Date();
     history = store.get('hist');
-    if (history.length = 999) { //Speicherlänge der History
+    if (history.length == 999) { //Speicherlänge der History
         history.pop();
     }
     history.unshift({hist_lemm: lemma, hist_time: hist_time});
@@ -302,4 +305,5 @@ function saveComment() {
 - Fehlermeldungen
 - Article of the day
 - Markierungen
+- Wenn man irgendwohin klickt sollten alle popupmenus geschlossen werden.
 */
