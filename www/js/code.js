@@ -199,6 +199,19 @@ function articlesInArray() {
     });
 }
 window.onload = articlesInArray ();
+/*window.onload = function() { //Random article bei Start
+    var lemmata_leng, random_num, random_article_title;
+    lemmata_leng = lemmata.length;
+    random_num = Math.random() * (lemmata_leng - 1) + 1;
+    random_article_title = lemmata[random_num];
+    getArticle(random_article);
+};*/
+/*window.onload = function() { //Letzter article bei Start
+    var last_article, history;
+    history = store.get('hist');
+    last_article = history[1];
+    getArticle(last_article);
+};*/
 
 $('#search-input').autocomplete({
     source: lemmata,
