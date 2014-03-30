@@ -269,39 +269,60 @@ function historyCheck() {
 }
 window.onload = historyCheck;
 
-//Comment
+//Comments
 function showComment() {
-    var id, comment, html;
-    $('#popup_comment').css('display', 'block');
-    id = $('.id').html();
-    comment = store.get(id);
-    //$('.comments_textarea').attr('placeholder').text(comment);
-    html = $('#popup_comment').html();
-    $('#popup_comment').html(html + '<br/><br/><a href="" id="button_save_comment" onclick="saveComment(); return false;">Kommentar speichern</a>');
+    var id, comments_array, html, i;
+    id = $('.id').html();                                   //was ist die ID des aktuellen Artikels?
+    comments_array = store.get(id);                               //gibt es hierzu schon Kommentare im local stprage?
+    if (comments_array == null) {                                 //wenn nicht...
+        comments_array = new Array();                             //... leg einen neuen Array an
+        comments_array[0] = 'Bisher wurde kein Kommentar angelegt.';
+        $('#comment_list').html('<li>' + comments_array[0] + '</li>');  //...schreib das hin
+        store.set(id, comments_array);                            //Und speicher den neuen Comment-Array (wichtig für saveComment).
+    } else {                                                //gibts einen ...
+        $('#comment_list').html(html + '<li>' + comments_array[0] + '</li><br/>');
+        for (i = 1; i < comments_array.length; i++) {             //... geh den durch und addiere alle htmls
+            $('<li></li>').html(comments_array[i]).appendTo('#comment_list');
+        }
+    }
 }
 $('#button_comment').click(function () {
-    var para1;
+    var para1, para2;
     para1 = $('#popup_comment').css('display');
-    if (para1 == 'none') {
+    para2 = $('#popup_comment_new_note').css('display');
+    if (para1 == 'none' && para2 == 'none') {
+        $('#popup_comment').css('display', 'block');
         showComment();
         return false;
     }
     if (para1 == 'block') {
         $('#popup_comment').css('display', 'none');
     }
+    if (para2 == 'block') {
+        $('#popup_comment_new_note').css('display', 'none');
+    }
 });
 function saveComment() {
-    var id, comment;
+    var id, comment_new, comments_array;
     id = $('.id').html();
-    comment = $('.comments_textarea').attr('placeholder').text();
-    store.set(id, comment);
-};
-function addComment() {
+    comments_array = store.get(id);
+    comment_new = $('#comments_textarea').val();
+    if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') {
+        comments_array[0] = comment_new;
+    } else {
+        comments_array.push(comment_new);
+    }
+    store.set(id, comments_array);
+    $('#popup_comment_new_note').css('display', 'none');
+    $('#popup_comment').css('display', 'block');
+    showComment();                                          //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
+}
+$('#add_comment_button').click(function () {
     $('#popup_comment').css('display', 'none');
     $('#popup_comment_new_note').css('display', 'block');
-};
-$('#add_comment_button').click(function () {
-    addComment();
+});
+$('#save_comment_button').click(function () {
+    saveComment();
 });
 
 /*Todo
@@ -313,4 +334,5 @@ $('#add_comment_button').click(function () {
 - Article of the day
 - Markierungen
 - Wenn man irgendwohin klickt sollten alle popupmenus geschlossen werden.
+- Abbildungen zoomen.
 */

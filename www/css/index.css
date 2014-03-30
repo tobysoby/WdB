@@ -381,8 +381,8 @@ background-image: url(img/bookmark_pressed.png);
         
 }
 
-#popup_comment {
-    display: block;
+#popup_comment, #popup_comment_new_note {
+    display: none;
     width: 300px;
     height: 400px;
     position: relative;
@@ -403,7 +403,7 @@ background-image: url(img/bookmark_pressed.png);
     display: block;
 }
 
-#add_comment_button {
+#add_comment_button, #save_comment_button {
     float:right;
     width: 30px;
     height: 30px;
@@ -415,7 +415,7 @@ background-image: url(img/bookmark_pressed.png);
     color: blue;
 }
 
-#popup_comment_headline {
+#popup_comment_headline, #popup_save_comment_headline {
     margin: auto;
     width: 100px;
     height: 30px;
@@ -426,10 +426,6 @@ background-image: url(img/bookmark_pressed.png);
     color: blue;
 
     
-}
-
-#popup_comment_new_note {
-    display: none;
 }
 
 #comment_list li {
