@@ -352,7 +352,7 @@ function closeAllPopups(aktuell) {
 
 //Kategorien
 var categories_Array = new Array();
-var categories_Id_Array = new Array();
+//var categories_Id_Array = new Array();
 function categoriesInArray() {
     $(document).ready(function () {
         $.ajax({
@@ -364,9 +364,10 @@ function categoriesInArray() {
                 $(xml).find('kategorien').each(function () {
                     $(this).find('kategorie').each(function () {
                         id = $(this).attr("id");
-                        categories_Id_Array[categories_Id_Array.length] = id;
+                        //categories_Id_Array[categories_Id_Array.length] = id; //man braucht keine zwei Arrays, es geht auch ein Array voller Objekte...
                         category = $(this).text();
-                        categories_Array[categories_Array.length] = category;
+                        //categories_Array[categories_Array.length] = category;
+                        categories_Array[categories_Array.length] = {Id: id, name: category}
                     });
                 });
             }
@@ -379,7 +380,7 @@ function showCategories() {
     $('.popup_categories').empty();
     $('.popup_categories').css('display', 'block');
     for (i = 0; i < categories_Array.length; i++) {
-        $('<li></li>').html("<a href='' onclick='getCategories(\"" + categories_Id_Array[i] + "\"); return false;'>" + categories_Array[i] + "</a>").appendTo('.popup_categories');
+        $('<li></li>').html("<a href='' onclick='getCategories(\"" + categories_Array[i].Id + "\"); return false;'>" + categories_Array[i].name + "</a>").appendTo('.popup_categories');
     }
 }
 $('#button_categories').click(function () {
@@ -416,12 +417,14 @@ function getCategories(Id) {
     });
 }
 
+//weiterspringen
+
 
 /*Todo
 - Notizen
 - History: Mit Hack erledigt. 
 - weiterspringen (Artikel vor, Artikel zurück)
-- Kategorien
+- Kategorien: funkt, bis auf Anzeige der Ergebnisse
 - Fehlermeldungen
 - Article of the day
 - Markierungen
