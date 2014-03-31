@@ -278,8 +278,8 @@ sidebarnav li {
     
 }
 
-.categories {
-         height: 40px;
+#button_categories {
+    height: 40px;
     width: 40px;
     display: block;
     background-image: url(img/bt_categories_pressed.png);
@@ -353,21 +353,7 @@ background-image: url(img/bookmark_pressed.png);
     font-style: italic;
 }
 
-.popup_bookmarks {
-    display: none;
-    width: 100px;
-    height: 150px;
-    position: relative;
-    left: 0px;
-    background-color: #ffffff;
-    bottom: 155px;
-    overflow: auto;
-    border-radius: 10px;
-    padding: 0 0 0 0;
-        
-}
-
-.popup_history {
+.popup_categories, .popup_bookmarks, .popup_history {
     display: none;
     width: 100px;
     height: 150px;

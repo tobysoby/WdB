@@ -178,7 +178,7 @@ $('.bookmarks').click(function () {
     if (para1 == 'block') {
         $('.popup_bookmarks').css('display', 'none');
     }
-    
+    //closeAllPopups ('.popup_bookmarks');
 });
 
 //Autosuggest
@@ -220,7 +220,7 @@ $('#search-input').autocomplete({
     source: lemmata,
     appendTo: '#search-result',
     select: function (event, ui) {
-        getArticle(ui.label);
+        getArticle(ui.item.label);
     }
 });
 
@@ -248,6 +248,7 @@ function showHistory() {
     }
 }
 $('.history').click(function () {
+    //closeAllPopups ('.popup_history');
     var para1;
     para1 = $('.popup_history').css('display');
     if (para1 == 'none') {
@@ -301,6 +302,7 @@ $('#button_comment').click(function () {
     if (para2 == 'block') {
         $('#popup_comment_new_note').css('display', 'none');
     }
+    //closeAllPopups();
 });
 function saveComment() {
     var id, comment_new, comments_array;
@@ -325,6 +327,96 @@ $('#save_comment_button').click(function () {
     saveComment();
 });
 
+//Wenn man irgendwo hinklickt
+$('#article').click(function () {
+    /*var para1, para2, para3, para4, para5; //braucht man alles nicht: klickt man irgendwohin und nichts ist auf, wird auch nichts zugemacht...
+    para1 = $('.popup_categories').css('display');
+    para2 = $('.popup_bookmarks').css('display');
+    para3 = $('.popup_history').css('display');
+    para4 = $('#popup_comment').css('display');
+    para5 = $('#popup_comment_new_note').css('display');
+    if (para1 == 'block' || para2 == 'block' || para3 == 'block' || para4 == 'block' || para5 == 'block') {
+        closeAllPopups ();
+    }*/
+    closeAllPopups();
+});
+
+function closeAllPopups(aktuell) {
+    $('.popup_categories').css('display', 'none');
+    $('.popup_bookmarks').css('display', 'none');
+    $('.popup_history').css('display', 'none');
+    $('#popup_comment').css('display', 'none');
+    $('#popup_comment_new_note').css('display', 'none');
+    $(aktuell).css('display', 'block');
+}
+
+//Kategorien
+var categories_Array = new Array();
+var categories_Id_Array = new Array();
+function categoriesInArray() {
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "src/data.xml",
+            dataType: "xml",
+            success: function (xml) {
+                var id, category;
+                $(xml).find('kategorien').each(function () {
+                    $(this).find('kategorie').each(function () {
+                        id = $(this).attr("id");
+                        categories_Id_Array[categories_Id_Array.length] = id;
+                        category = $(this).text();
+                        categories_Array[categories_Array.length] = category;
+                    });
+                });
+            }
+        });
+    });
+}
+window.onload = categoriesInArray();
+function showCategories() {
+    var i;
+    $('.popup_categories').empty();
+    $('.popup_categories').css('display', 'block');
+    for (i = 0; i < categories_Array.length; i++) {
+        $('<li></li>').html("<a href='' onclick='getCategories(\"" + categories_Id_Array[i] + "\"); return false;'>" + categories_Array[i] + "</a>").appendTo('.popup_categories');
+    }
+}
+$('#button_categories').click(function () {
+    var para1;
+    para1 = $('.popup_categories').css('display');
+    if (para1 == 'none') {
+        showCategories();
+        return false;
+    }
+    if (para1 == 'block') {
+        $('.popup_categories').css('display', 'none');
+    }
+});
+function getCategories(Id) {
+    var para, cat_id, cat, art_id, art_lemm, html;
+    $('#search-result').empty();
+    $.ajax({
+        type: "GET",
+        url: "src/data.xml",
+        dataType: "xml",
+        success: function (xml) {
+            var id, category;
+            $(xml).find('artikel').each(function () {
+                art_id = $(this).attr('id');
+                art_lemm = $(this).find('lemma').text();
+                cat_id = $(this).find('kat').attr('id');
+                if (cat_id == Id) {
+                    $('<li></li>').html("<a href='' onclick='getArticle(\"" + art_id + "\"); return false;'>" + art_lemm + "</a>").appendTo('#search-result');
+                }
+            });
+            html = $('#search-result').html();
+            $('#search-result').html('<ul>' + html + '</ul>');
+        }
+    });
+}
+
+
 /*Todo
 - Notizen
 - History: Mit Hack erledigt. 
@@ -333,6 +425,6 @@ $('#save_comment_button').click(function () {
 - Fehlermeldungen
 - Article of the day
 - Markierungen
-- Wenn man irgendwohin klickt sollten alle popupmenus geschlossen werden.
+- Wenn man irgendwohin klickt sollten alle popupmenus geschlossen werden: klappt, aber: wenn ein menü auf ist, sollte dies beim öffnen eines anderen geschlossen werden.
 - Abbildungen zoomen.
 */
