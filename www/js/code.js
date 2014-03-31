@@ -46,24 +46,34 @@ var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
     }
     var bookmarked_bool = window.localStorage.getItem(lemma);
     if (bookmarked_bool === "bookmarked") {
-        $("#bookmark").html("Bookmark");
+        $("#bookmark").css('display', 'none');
+        $("#bookmarked").css('display', 'block');
     } else {
-        $("#bookmark").html("Bookmarked");
+        $("#bookmarked").css('display', 'none');
+        $("#bookmark").css('display', 'block');
     }
 };
 
 //Bookmark-Eventhandler
-$("#bookmarked").click(function () {
+function bookmarkEvent() {
     var bookmarked_bool, aktuelles_lemma;
     aktuelles_lemma = $('.lemma').html();
     bookmarked_bool = window.localStorage.getItem(aktuelles_lemma);
     if (bookmarked_bool === "bookmarked") {
         unbookmarkArticle(aktuelles_lemma);
-        $("#bookmark").html("Bookmark");
+        $("#bookmarked").css('display', 'none');
+        $("#bookmark").css('display', 'block');
     } else {
         bookmarkArticle(aktuelles_lemma);
-        $("#bookmark").html("Bookmarked");
+        $("#bookmark").css('display', 'none');
+        $("#bookmarked").css('display', 'block');
     }
+}
+$("#bookmarked").click(function () {
+    bookmarkEvent();
+});
+$("#bookmark").click(function () {
+    bookmarkEvent();
 });
 
 var showMoreArticles = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
@@ -194,21 +204,22 @@ function articlesInArray() {
                     var lemma = $(this).find('lemma').text();
                     lemmata[lemmata.length] = lemma;
                 });
+                randomArticle();
             }
         });
     });
+    
 }
 window.onload = articlesInArray();
-/*$(document).ready(function () { //Random article bei Start: funkt net
-    var lemmata_leng, random_num, random_article_title;
-    articlesInArray();
-    lemmata_leng = lemmata.length;
-    random_num = Math.floor(Math.random() * lemmata_leng + 1);
-    window.alert(random_num);
-    random_article_title = lemmata[random_num];
-    window.alert(random_article_title);
-    getArticle(random_article_title);
-});*/
+function randomArticle() { //Random article bei Start: funkt nur wenn es in articleInArray aufgerufen wird... muss wohl erst geladen sein...
+    $(document).ready(function () {
+        var lemmata_leng, random_num, random_article_title;
+        lemmata_leng = lemmata.length;
+        random_num = Math.floor(Math.random() * lemmata_leng + 1);
+        random_article_title = lemmata[random_num];
+        getArticle(random_article_title);
+    });
+}
 /*$(document).ready(function() { //Letzter article bei Start: funkt
     var last_article, history;
     history = store.get('hist');
@@ -418,12 +429,36 @@ function getCategories(Id) {
 }
 
 //weiterspringen
-
+function jumpBack() {
+    var id, new_id, para;
+    id = $('.id').html();
+    para = id.slice('1', '6');
+    para = parseInt(para);
+    para = para - 1;
+    para = para.toString();
+    new_id = 'a' + para;
+    getArticle(new_id);
+}
+$('.back').click(function () {
+    jumpBack();
+});
+function jumpForward() {
+    var id, new_id, para;
+    id = $('.id').html();
+    para = id.slice('1', '6');
+    para = parseInt(para);
+    para = para + 1;
+    para = para.toString();
+    new_id = 'a' + para;
+    getArticle(new_id);
+}
+$('.forward').click(function () {
+    jumpForward();
+});
 
 /*Todo
 - Notizen
 - History: Mit Hack erledigt. 
-- weiterspringen (Artikel vor, Artikel zurück)
 - Kategorien: funkt, bis auf Anzeige der Ergebnisse
 - Fehlermeldungen
 - Article of the day
