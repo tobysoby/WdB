@@ -89,79 +89,41 @@ var para1 = "-2";
 
 //Unterfunktion getArticle
 function getArticle(parameter) {
-
-//Lade das XML
     $(document).ready(function () {
         $.ajax({
             type: "GET",
             url: "src/data.xml",
             dataType: "xml",
-
-//Wenn erfolgreich
             success: function (xml) {
-
-//Für jeden Node 'Artikel', tue:
-                var alle_artikel = $(xml).find('artikel');
-                $(alle_artikel).each(function () {
-
-//Hole die einzelnen Bestandteile pro Artikel:
-                    var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2;
-                    artikel = $(this);
-                    lemma = $(artikel).find('lemma').text();
-                    l_zusatz = $(artikel).find('l_zusatz').text();
-                    id = $(artikel).attr('id');
-                    absatz = $(artikel).find('absatz').text();
-                    bedeutung = $(artikel).find('bedeutung');
-                    
-                    abbildung_src = $(artikel).find('abbildung').attr('src');
-
-//Stimmt das aktuelle Lemma mit der Eingabe überein?
-                    if (lemma === parameter || id === parameter) {
-//hole die anderen Infos aus den einzelnen Nodes
-                        showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-                        
-                        //Verweise:
-                        $(bedeutung).find('verweis').each(function () {
-                            var verweis, verweis_link;
-                            verweis = $(this).text();
-                            verweis_link = $(this).attr("idref");
-                            $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
-                            //getVerweise(this);
-                        });
-                        //Ende Verweise.
-                        bedeutung_text = $(bedeutung).html();
-                        showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-                    }
-
-//Gibt es den Parameter in irgendeinem Text?
-                    para2 = absatz.indexOf(parameter);
-                    if (para2 != "-1") {
-                        if (para1 != "-1") {
-                            $('#weitere_Artikel_bool').html('weitere Artikel:<br>');
-                            para1 = "-1";
-                        }
-                        showMoreArticles(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-                    }
-
-                    //funktioniert nicht: checkt bei jedem Artikel ob er den Text nicht beinhaltet und da dem so ist, wird er geleert -> Wird immer geleert...
-//                    if (para2 = "-1") {
-//                            $('#weitere_Artikel').empty();
-//
-                    
-//                        var verweis = $(this).find('verweis').text();
-//                        var verweis_link = $(this).find('verweis').attr('idref');
-//                        if (verweis_link != '') {
-//                        $('<div></div>').html("<input type='button' value='" + verweis + "' onclick='getArticle('" + verweis_link + "')'><br/><br/>").appendTo('#weitere_Artikel');
-//                        }
-
-                });
+                parseXML (xml, parameter);
             }
-
         });
-    }
-                     );
+    });
 }
 
+function parseXML (xml, parameter) {
+    var alle_artikel = $(xml).find('artikel');
+    $(alle_artikel).each(function () {
+        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2;
+        artikel = $(this);
+        lemma = $(artikel).find('lemma').text();
+        l_zusatz = $(artikel).find('l_zusatz').text();
+        id = $(artikel).attr('id');
+        absatz = $(artikel).find('absatz').text();
+        bedeutung = $(artikel).find('bedeutung');
+        abbildung_src = $(artikel).find('abbildung').attr('src');
+        if (lemma === parameter || id === parameter) {
+            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
+            $(bedeutung).find('verweis').each(function () {
+                var verweis, verweis_link;
+                verweis_link = $(this).attr("idref");
+                $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
+            });
+            bedeutung_text = $(bedeutung).html();
+            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
+        }
+    });
+}
 
 
 
