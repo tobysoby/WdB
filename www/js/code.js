@@ -3,15 +3,72 @@
 /*global $, jQuery, alert*/
 "use strict";
 
+//checke if schon eine history besteht, und wie lange die ist
+function historyCheck() {
+    var history = new Array ();
+    history = store.get('hist');
+    if (history == null) {
+        history = ['nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix',  'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix'];
+        store.set('hist', history);
+    }
+}
+window.onload = historyCheck();
+
+//Unterfunktion getArticle
+function bedeutungUmsetzung(bedeutung) {
+    var verweis, verweis_link, bedeutung_text;
+    $(bedeutung).find('verweis').each(function () {
+        verweis = $(this).text();
+        verweis_link = $(this).attr("idref");
+        $(this).replaceWith('<a href="#" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
+    });
+    bedeutung_text = $(bedeutung).html();
+    return bedeutung_text;
+}
+function parseXML(xml, parameter) {
+    var alle_artikel = $(xml).find('artikel');
+    $(alle_artikel).each(function () {
+        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2, verweis, verweis_link, test;
+        artikel = $(this);
+        lemma = $(artikel).find('lemma').text();
+        l_zusatz = $(artikel).find('l_zusatz').text();
+        id = $(artikel).attr('id');
+        absatz = $(artikel).find('absatz').text();
+        bedeutung = $(artikel).find('bedeutung');
+        test = bedeutung.text();
+        abbildung_src = $(artikel).find('abbildung').attr('src');
+        bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
+        bedeutung = bedeutungUmsetzung(bedeutung);
+        if (lemma === parameter || id === parameter) {
+            console.log(bedeutung);
+            console.log(bedeutung_text);
+            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
+        }
+    });
+}
+function getArticle(parameter) {
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "src/data.xml",
+            dataType: "xml",
+            success: function (xml) {
+                parseXML(xml, parameter);
+            }
+        });
+    });
+}
+
 //Artikel suchen
 function artikelSuchen() {
     var parameter, eingabe = $("#search-input").val();
     if (eingabe !== "") {
         parameter = eingabe;
     }
+    /*
     if (eingabe == "") {
         //schreibe: Unpassender Suchbegriff
-    }
+    }*/
     getArticle(parameter);
 }
 $("#artikel_suchen").click(function () {
@@ -34,14 +91,13 @@ var unbookmarkArticle = function (lemma) {
 
 //Artikel anzeigen
 var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
-    $('#lemma').html(lemma);
-    $('#lemmazusatz').html(l_zusatz);
+    $('#lemma').text(lemma);
+    $('#lemmazusatz').text(l_zusatz);
     $('#bedeutung').html(bedeutung);
-    $('#id').html(id);
+    $('#id').text(id);
     addToHistory(lemma);
-    
     if (abbildung_src != null) {
-        $('#abbildung').html("<img src=img/" + abbildung_src + ">");
+        $('#abbildung').html("<img id='abbildung_div' src=img/" + abbildung_src + ">");
     } else {
         $('#abbildung').empty();
     }
@@ -77,61 +133,8 @@ $("#bookmark").click(function () {
     bookmarkEvent();
 });
 
-var showMoreArticles = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
-    $('<div></div>').html('Artikel-ID: ' + id + '<br/>' + 'Lemma: ' + lemma + '</br>' + 'l_zusatz: ' + l_zusatz + '</br>' + bedeutung + '</br>').appendTo('#weitere_Artikel');
-    if (abbildung_src != null) {
-        $('<div></div>').html("<img src=img/" + abbildung_src + "></br></br>").appendTo('#weitere_Artikel');
-    }
-};
-
 var lemmata = new Array();
 var para1 = "-2";
-
-//Unterfunktion getArticle
-function getArticle(parameter) {
-    $(document).ready(function () {
-        $.ajax({
-            type: "GET",
-            url: "src/data.xml",
-            dataType: "xml",
-            success: function (xml) {
-                parseXML (xml, parameter);
-            }
-        });
-    });
-}
-
-function bedeutungUmsetzung (bedeutung) {
-    var verweis, verweis_link, bedeutung_text;
-    $(bedeutung).find('verweis').each(function () {
-        verweis = $(this).text();
-        verweis_link = $(this).attr("idref");
-        $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
-    });
-    bedeutung_text = $(bedeutung).html();
-    return bedeutung_text;
-}
-                    
-
-function parseXML (xml, parameter) {
-    var alle_artikel = $(xml).find('artikel');
-    $(alle_artikel).each(function () {
-        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2, verweis, verweis_link;
-        artikel = $(this);
-        lemma = $(artikel).find('lemma').text();
-        l_zusatz = $(artikel).find('l_zusatz').text();
-        id = $(artikel).attr('id');
-        absatz = $(artikel).find('absatz').text();
-        bedeutung = $(artikel).find('bedeutung');
-        abbildung_src = $(artikel).find('abbildung').attr('src');
-        bedeutung_text = bedeutungUmsetzung (bedeutung);
-        if (lemma === parameter || id === parameter) {
-            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-        }
-    });
-}
-
-
 
 // Bookmarks anzeigen lassen
 function showBookmarks() {
@@ -239,16 +242,6 @@ $('.history').click(function () {
         $('.popup_history').css('display', 'none');
     }
 });
-//checke if schon eine history besteht, und wie lange die ist
-function historyCheck() {
-    var history = new Array ();
-    history = store.get('hist');
-    if (history == null) {
-        history = ['nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix',  'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix', 'nix'];
-        store.set('hist', history);
-    }
-}
-window.onload = historyCheck;
 
 //Comments
 function showComment() {
@@ -309,18 +302,8 @@ $('#save_comment_button').click(function () {
 
 //Wenn man irgendwo hinklickt
 $('#article').click(function () {
-    /*var para1, para2, para3, para4, para5; //braucht man alles nicht: klickt man irgendwohin und nichts ist auf, wird auch nichts zugemacht...
-    para1 = $('.popup_categories').css('display');
-    para2 = $('.popup_bookmarks').css('display');
-    para3 = $('.popup_history').css('display');
-    para4 = $('#popup_comment').css('display');
-    para5 = $('#popup_comment_new_note').css('display');
-    if (para1 == 'block' || para2 == 'block' || para3 == 'block' || para4 == 'block' || para5 == 'block') {
-        closeAllPopups ();
-    }*/
     closeAllPopups();
 });
-
 function closeAllPopups(aktuell) {
     $('.popup_categories').css('display', 'none');
     $('.popup_bookmarks').css('display', 'none');
@@ -344,9 +327,7 @@ function categoriesInArray() {
                 $(xml).find('kategorien').each(function () {
                     $(this).find('kategorie').each(function () {
                         id = $(this).attr("id");
-                        //categories_Id_Array[categories_Id_Array.length] = id; //man braucht keine zwei Arrays, es geht auch ein Array voller Objekte...
                         category = $(this).text();
-                        //categories_Array[categories_Array.length] = category;
                         categories_Array[categories_Array.length] = {Id: id, name: category}
                     });
                 });
@@ -360,7 +341,7 @@ function showCategories() {
     $('.popup_categories').empty();
     $('.popup_categories').css('display', 'block');
     for (i = 0; i < categories_Array.length; i++) {
-        $('<li></li>').html("<a href='' onclick='getCategories(\"" + categories_Array[i].Id + "\"); return false;'>" + categories_Array[i].name + "</a>").appendTo('.popup_categories');
+        $('<li></li>').html("<a href='#' onclick='getCategories(\"" + categories_Array[i].Id + "\"); return false;'>" + categories_Array[i].name + "</a>").appendTo('.popup_categories');
     }
 }
 $('#button_categories').click(function () {
@@ -388,7 +369,7 @@ function getCategories(Id) {
                 art_lemm = $(this).find('lemma').text();
                 cat_id = $(this).find('kat').attr('id');
                 if (cat_id == Id) {
-                    $('<li></li>').html("<a href='' onclick='getArticle(\"" + art_id + "\"); return false;'>" + art_lemm + "</a>").appendTo('#search-result');
+                    $('<li></li>').html("<a href='#' onclick='getArticle(\"" + art_id + "\"); return false;'>" + art_lemm + "</a>").appendTo('#search-result');
                 }
             });
             html = $('#search-result').html();

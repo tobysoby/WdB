@@ -105,6 +105,7 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/store+json2.min.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-ui.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/wysihtml5.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-2.1.0.min.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-1.11.0.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res/screen \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res/icon \

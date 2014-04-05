@@ -349,6 +349,16 @@ background-image: url(img/bookmark_pressed.png);
     
 }
 
+#bedeutung {
+}
+
+#abbildung {
+}
+
+#abbildung_div {
+    height:auto; width:auto; max-width:300px; max-height:300px;
+}
+
 #lemmazusatz {
     font-style: italic;
 }
