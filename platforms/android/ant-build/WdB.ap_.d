@@ -26,6 +26,7 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/cordova.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/config.xml \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/icon.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/LICENSE.txt \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/SourceSansPro-BlackIt.otf \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/SourceSansPro-BoldIt.otf \
@@ -95,7 +96,6 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen/Schriftbreite.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen/Figurensatz.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen/Laufweite.png \
-/home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen/schriftentwicklung.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen/korrekturzeichen_1.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/code.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery.mobile-1.4.2.min.js \
