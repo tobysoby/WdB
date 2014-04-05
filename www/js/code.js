@@ -113,9 +113,9 @@ function parseXML (xml, parameter) {
         bedeutung = $(artikel).find('bedeutung');
         abbildung_src = $(artikel).find('abbildung').attr('src');
         if (lemma === parameter || id === parameter) {
-            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
             $(bedeutung).find('verweis').each(function () {
                 var verweis, verweis_link;
+                verweis = $(this).text();
                 verweis_link = $(this).attr("idref");
                 $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
             });
