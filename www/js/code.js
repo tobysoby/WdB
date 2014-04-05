@@ -101,10 +101,22 @@ function getArticle(parameter) {
     });
 }
 
+function bedeutungUmsetzung (bedeutung) {
+    var verweis, verweis_link, bedeutung_text;
+    $(bedeutung).find('verweis').each(function () {
+        verweis = $(this).text();
+        verweis_link = $(this).attr("idref");
+        $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
+    });
+    bedeutung_text = $(bedeutung).html();
+    return bedeutung_text;
+}
+                    
+
 function parseXML (xml, parameter) {
     var alle_artikel = $(xml).find('artikel');
     $(alle_artikel).each(function () {
-        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2;
+        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2, verweis, verweis_link;
         artikel = $(this);
         lemma = $(artikel).find('lemma').text();
         l_zusatz = $(artikel).find('l_zusatz').text();
@@ -112,14 +124,8 @@ function parseXML (xml, parameter) {
         absatz = $(artikel).find('absatz').text();
         bedeutung = $(artikel).find('bedeutung');
         abbildung_src = $(artikel).find('abbildung').attr('src');
+        bedeutung_text = bedeutungUmsetzung (bedeutung);
         if (lemma === parameter || id === parameter) {
-            $(bedeutung).find('verweis').each(function () {
-                var verweis, verweis_link;
-                verweis = $(this).text();
-                verweis_link = $(this).attr("idref");
-                $(this).replaceWith('<a href="" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
-            });
-            bedeutung_text = $(bedeutung).html();
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
