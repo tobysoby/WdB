@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Hello World</title>
+    </head>
+    <body>
+        <div class="app">
+            
+        <div id="sidebar">
+            <div id="search">
+                <input type="text" placeholder="Suchbegriff" id="search-input">
+                </div>
+            <div id="search-result">
+            <ul>
+                </ul>
+                </div>
+            <div id="sidebarnav">
+            <ul class="sidebarnav">
+            <li>
+                <a id="button_categories" href="#"><ul class="popup_categories"></ul></a></li>
+            <li>
+                <a class="bookmarks" alt="Bookmarks" href=# ><ul class="popup_bookmarks"></ul></a>
+                </li>
+            <li>
+                <a class="history" href=# ><ul class="popup_history"></ul></a></li></ul>
+            </div>
+            </div>
+        <div id="main">
+             <div id="bookmark"></div>
+             <div id="bookmarked"></div>
+            <div id="article">
+                <h1 id="lemma">Überschrift Artikel</h1>
+                <p id="id">ID</p>
+               <p id="lemmazusatz">Lemma Zusatz</p>
+                <p id="bedeutung">Bedeutung</p>
+                <p id="abbildung">Abbildung</p>
+                </div>
+            <div id="mainnav">
+                <ul class="mainnav">
+            <li>
+                <a class="back" href="#"></a></li>
+            <li>
+                <a class="forward" href=# ></a></li>
+            <li>
+                <a class="graph" href=# ></a></li>
+                <li>
+                <a class="print" href=# ></a></li>
+                <li>
+                <a id="button_comment" class="comment" href=# ></a></li>
+                </ul>
+                   <div id="popup_comment">
+                     <h2 id="popup_comment_headline">Notizen</h2>
+                       <div id="add_comment_button">+</div>
+                      <ul id="comment_list"></ul> 
+                       </div>
+                       <div id="popup_comment_new_note">
+                           <h2 id="popup_save_comment_headline">Neue Notiz</h2>
+                           <div id="save_comment_button">Save</div>
+                    <input id="comments_textarea" placeholder="Enter your text ..." autofocus></input>
+                    </div>
+            </div>
+            
+            </div>
+            
+            
+            
+        </div>
+        <script type="text/javascript" src="js/cordova.js"></script>
+        <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery.ui.autocomplete.js"></script>
+        <script type="text/javascript" src="js/store+json2.min.js"></script>
+        <script type="text/javascript" src="js/code.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            //app.initialize();
+        </script>
+    </body>
+</html>
