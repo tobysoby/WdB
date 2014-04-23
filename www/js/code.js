@@ -16,14 +16,64 @@ window.onload = historyCheck();
 
 //Unterfunktion getArticle
 function bedeutungUmsetzung(bedeutung) {
-    var verweis, verweis_link, bedeutung_text;
+    var verweis, verweis_link, bedeutung_text, para, span;
     $(bedeutung).find('verweis').each(function () {
         verweis = $(this).text();
         verweis_link = $(this).attr("idref");
-        $(this).replaceWith('<a href="#" id="link" onclick="getArticle(\'' + verweis_link + '\'); return false;">' + verweis + '</a>');
+        $(this).html("<a href='#' id='link' onclick='getArticle(\"" + verweis_link + "\"); return false;'>" + verweis + "</a>");
     });
-    bedeutung_text = $(bedeutung).html();
-    return bedeutung_text;
+    bedeutung = bedeutung.html();
+    return bedeutung;
+}
+function bedeutungUmsetzungJavascript (bedeutung) {
+    var verweis, verweis_link, para1, para2;
+    var verweis_arr = new Array (); // neuer Array
+    $(bedeutung).find('verweis').each(function () {
+        verweis = $(this).text();
+        verweis_link = $(this).attr("idref");
+        para1 = "<a href='#' id='link' onclick='getArticle(\"" + verweis_link + "\"); return false;'>" + verweis + "</a>";
+        para2 = $(this);
+        //var htmlObject = document.createElement('div');
+        //htmlObject.innerHTML = para1;
+        $(para2).replaceWith(para1);
+    });
+    //bedeutung = bedeutung.html();
+    return bedeutung;
+}
+function bedeutungUmsetzungDiv (bedeutung) {
+    var verweis, verweis_link, para1, para2, para3, i;
+    var verweis_arr = new Array ();
+    $(bedeutung).find('verweis').each(function () {
+        verweis = $(this).text();
+        verweis_link = $(this).attr("idref");
+        verweis_arr.push(verweis_link);
+        para1 = "<span id='" + verweis_link + "' style='text-decoration: underline;'>" + verweis + "</span>";
+        para2 = $(this);
+        $(para2).replaceWith(para1);
+    });
+    console.log(verweis_arr);
+    for (i=0; i<verweis_arr.length; i++) {
+        para3 = "<div><script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script></div>";
+        $(para3).appendTo(bedeutung);
+        //bedeutung = bedeutung.html();
+    };
+    return bedeutung;
+}
+function bedeutungUmsetzungRegExp(bedeutung) {
+    var eins, zwei, drei, eins_n, zwei_n, drei_n;
+    eins = /<verweis idref="/g;
+    zwei = /" typ="t01">/g;
+    drei = /<.verweis>/g;
+    eins_n = "<a href='#' id='link' onclick='getArticle(\"";
+    zwei_n = "\"); return false;'>";
+    drei_n = "</a>";
+    /*$(bedeutung).html('<verweis idref="').replaceWith("<a href='#' id='link' onclick='getArticle(\"");
+    $(bedeutung).html('" typ="t01">').replaceWith("\"); return false;'>");
+    $(bedeutung).html('</verweis>').replaceWith("</a>");*/
+    bedeutung = bedeutung.replace(/<verweis idref="/g, "<a href='#' id='link' onclick='getArticle(\"");
+    bedeutung = bedeutung.replace(/" typ="t01">/g, zwei_n);
+    bedeutung = bedeutung.replace(/<.verweis>/g, "</a>");
+    return bedeutung;
 }
 function parseXML(xml, parameter) {
     var alle_artikel = $(xml).find('artikel');
@@ -35,14 +85,11 @@ function parseXML(xml, parameter) {
         id = $(artikel).attr('id');
         absatz = $(artikel).find('absatz').text();
         bedeutung = $(artikel).find('bedeutung');
-        test = bedeutung.text();
         abbildung_src = $(artikel).find('abbildung').attr('src');
         bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
-        bedeutung = bedeutungUmsetzung(bedeutung);
         if (lemma === parameter || id === parameter) {
-            console.log(bedeutung);
-            console.log(bedeutung_text);
-            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
+            bedeutung = bedeutungUmsetzungDiv(bedeutung);
+            showArticle(id, lemma, l_zusatz, bedeutung, abbildung_src);
         }
     });
 }
@@ -407,7 +454,7 @@ $('.forward').click(function () {
 });
 
 /*Todo
-- Notizen
+- Notizen: einzelne bearbeiten
 - History: Mit Hack erledigt. 
 - Kategorien: funkt, bis auf Anzeige der Ergebnisse
 - Fehlermeldungen
