@@ -68,14 +68,9 @@ function parseXML(xml, parameter) {
         l_zusatz = $(artikel).find('l_zusatz').text();
         id = $(artikel).attr('id');
         absatz = $(artikel).find('absatz');
-        //bedeutung = $(artikel).find('bedeutung');
         abbildung_src = $(artikel).find('abbildung').attr('src');
-        //bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
         if (lemma === parameter || id === parameter) {
             bedeutung_text = bedeutungUmsetzungDiv(absatz);
-            //console.log(bedeutung_text);
-            //bedeutung_text = bedeutung_text[0].innerHTML;
-            //console.log(bedeutung_text);
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
