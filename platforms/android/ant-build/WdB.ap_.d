@@ -68,6 +68,7 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/css/img/bookmark_unpressed.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/css/img/bookmark_pressed.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/css/img/bt_backward.png \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/src/data_org.xml \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/src/data.xml \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/bt_bookmarks_pressed.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/img/abbildungen \
