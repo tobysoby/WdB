@@ -26,26 +26,46 @@ function bedeutungUmsetzung(bedeutung) {
     return bedeutung;
 }
 
-function bedeutungUmsetzungDiv (bedeutung_text) { // Verweise werden nicht durch Links ersetzt, sondern durch spans mit ids, die können dann mit einer click-Funktion aktiviert werden.
-    var verweis, verweis_link, para1, para2, para3, i;
+function bedeutungUmsetzungDiv (bedeutung) { // Verweise werden nicht durch Links ersetzt, sondern durch spans mit ids, die können dann mit einer click-Funktion aktiviert werden.
+    var verweis, verweis_link, para1, para2, para3, i, text, bedeutung_text;
+    var verweis_link_arr = new Array ();
     var verweis_arr = new Array ();
-    $(bedeutung_text).find('verweis').each(function () {
+    var text_arr = new Array ();
+    var skript_arr = new Array ();
+    $(bedeutung).find('text').each(function () {
+        text = $(this).text();
+        text_arr.push(text);
+    });
+    $(bedeutung).find('verweis').each(function () {
         verweis = $(this).text();
         verweis_link = $(this).attr("idref");
-        verweis_arr.push(verweis_link);
-        para1 = "<span id='" + verweis_link + "' style='text-decoration: underline;'>" + verweis + "</span>";
-        para2 = $(this);
-        $(para2).replaceWith(para1);
+        verweis_arr.push(verweis);
+        verweis_link_arr.push(verweis_link);
+        //para1 = "<span id='" + verweis_link + "' style='text-decoration: underline;'>" + verweis + "</span>";
+        //para2 = $(this);
+        //$(para2).replaceWith(para1);
     });
     for (i=0; i<verweis_arr.length; i++) {
-        para3 = "<script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script>";
-        $(para3).appendTo(bedeutung_text);
+        para3 = "<script>$('#" + verweis_link_arr[i] + "').click(function () {getArticle('" + verweis_link_arr[i] + "');});</script>";
+        //$(para3).appendTo(bedeutung_text);
+        skript_arr[i] = para3;
     };
+    for (i=0; i<verweis_arr.length; i++) {
+        verweis_arr[i] = "<span id='" + verweis_link_arr[i] + "' style='text-decoration: underline;'>" + verweis_arr[i] + "</span>";
+    }
+    bedeutung_text = ''
+    for (i=0; i<text_arr.length; i++) {
+        bedeutung_text = bedeutung_text + text_arr[i] + verweis_arr[i];
+    }
     console.log(bedeutung_text);
-    bedeutung_text = bedeutung_text.html();
+    for (i=0; i<skript_arr.length; i++) {
+        bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
+    }
     console.log(bedeutung_text);
-    bedeutung_text = String(bedeutung_text);
-    console.log(bedeutung_text);
+    //bedeutung_text = bedeutung_text.html();
+    //console.log(bedeutung_text);
+    //bedeutung_text = String(bedeutung_text);
+    //console.log(bedeutung_text)
     return bedeutung_text;
 }
 
