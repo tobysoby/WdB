@@ -25,7 +25,7 @@ function bedeutungUmsetzung(bedeutung) {
     bedeutung = bedeutung.html();
     return bedeutung;
 }
-function bedeutungUmsetzungJavascript (bedeutung) {
+function bedeutungUmsetzungJavascript (bedeutung) { // Versuch alles ohne JQuery sondern mit quasi nativem Javascript zu lösen
     var verweis, verweis_link, para1, para2;
     var verweis_arr = new Array (); // neuer Array
     $(bedeutung).find('verweis').each(function () {
@@ -40,10 +40,10 @@ function bedeutungUmsetzungJavascript (bedeutung) {
     //bedeutung = bedeutung.html();
     return bedeutung;
 }
-function bedeutungUmsetzungDiv (bedeutung) {
+function bedeutungUmsetzungDiv (bedeutung_text) { // Verweise werden nicht durch Links ersetzt, sondern durch spans mit ids, die können dann mit einer click-Funktion aktiviert werden.
     var verweis, verweis_link, para1, para2, para3, i;
     var verweis_arr = new Array ();
-    $(bedeutung).find('verweis').each(function () {
+    $(bedeutung_text).find('verweis').each(function () {
         verweis = $(this).text();
         verweis_link = $(this).attr("idref");
         verweis_arr.push(verweis_link);
@@ -51,13 +51,14 @@ function bedeutungUmsetzungDiv (bedeutung) {
         para2 = $(this);
         $(para2).replaceWith(para1);
     });
-    console.log(verweis_arr);
+    //console.log(verweis_arr);
     for (i=0; i<verweis_arr.length; i++) {
-        para3 = "<div><script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script></div>";
-        $(para3).appendTo(bedeutung);
-        //bedeutung = bedeutung.html();
+        para3 = "<script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script>";
+        $(para3).appendTo(bedeutung_text);
+        //bedeutung.write("<div><script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script></div>");
     };
-    return bedeutung;
+    //bedeutung = bedeutung.html();
+    return bedeutung_text;
 }
 function bedeutungUmsetzungRegExp(bedeutung) {
     var eins, zwei, drei, eins_n, zwei_n, drei_n;
@@ -78,18 +79,24 @@ function bedeutungUmsetzungRegExp(bedeutung) {
 function parseXML(xml, parameter) {
     var alle_artikel = $(xml).find('artikel');
     $(alle_artikel).each(function () {
-        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, abbildung_src, l_zusatz, para2, verweis, verweis_link, test;
+        var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3;
         artikel = $(this);
         lemma = $(artikel).find('lemma').text();
         l_zusatz = $(artikel).find('l_zusatz').text();
         id = $(artikel).attr('id');
-        absatz = $(artikel).find('absatz').text();
-        bedeutung = $(artikel).find('bedeutung');
+        absatz = $(artikel).find('absatz');
+        //bedeutung = $(artikel).find('bedeutung');
         abbildung_src = $(artikel).find('abbildung').attr('src');
-        bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
+        //bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
         if (lemma === parameter || id === parameter) {
-            bedeutung = bedeutungUmsetzungDiv(bedeutung);
-            showArticle(id, lemma, l_zusatz, bedeutung, abbildung_src);
+            bedeutung_text = bedeutungUmsetzungDiv(absatz);
+            //console.log(absatz);
+            console.log(bedeutung_text);
+            //bedeutung_text_2 = bedeutung_text;
+            //bedeutung_text = "<div>" + bedeutung_text + "</div>";
+            //bedeutung_text = bedeutung_text[0].innerHTML;
+            console.log(bedeutung_text);
+            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
 }
@@ -137,10 +144,10 @@ var unbookmarkArticle = function (lemma) {
 };
 
 //Artikel anzeigen
-var showArticle = function (id, lemma, l_zusatz, bedeutung, abbildung_src) {
+var showArticle = function (id, lemma, l_zusatz, bedeutung_text, abbildung_src) {
     $('#lemma').text(lemma);
     $('#lemmazusatz').text(l_zusatz);
-    $('#bedeutung').html(bedeutung);
+    $('#bedeutung').html(bedeutung_text[0].innerHTML);
     $('#id').text(id);
     addToHistory(lemma);
     if (abbildung_src != null) {
