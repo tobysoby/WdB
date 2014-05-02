@@ -27,37 +27,53 @@ function bedeutungUmsetzung(bedeutung) {
 }
 
 function bedeutungUmsetzungDiv (bedeutung) { // Verweise werden nicht durch Links ersetzt, sondern durch spans mit ids, die können dann mit einer click-Funktion aktiviert werden.
-    var verweis, verweis_link, para1, para2, para3, i, text, bedeutung_text;
-    var verweis_link_arr = new Array ();
-    var verweis_arr = new Array ();
-    var text_arr = new Array ();
+    var verweis, verweis_link, para1, para2, para3, i, text, bedeutung_text, absatz;
     var skript_arr = new Array ();
-    $(bedeutung).find('text').each(function () { // hole die Text-Nodes
-        text = $(this).text(); // Text aus Text-Nodes
-        text_arr.push(text); // packs in das Text_Array
+    var bedeutung_text_arr = new Array ();
+    
+    $(bedeutung).find('absatz').each(function () { // für jeden Absatz in der Bedeutung
+        var verweis_link_arr = new Array (); // die Arrays müssen für jeden Absatz neu gesetzt werden, sonst sind noch Reste drin die später wieder mit ausgegeben werden
+        var verweis_arr = new Array ();
+        var text_arr = new Array ();
+        absatz = $(this);
+        bedeutung_text = '';
+        $(absatz).find('text').each(function () { // hole die Text-Nodes
+            text = $(this).text(); // Text aus Text-Nodes
+            text_arr.push(text); // packs in das Text_Array
+        });
+        $(absatz).find('verweis').each(function () { // hole Verweis-Nodes
+            verweis = $(this).text(); // hole Verweis
+            verweis_link = $(this).attr("idref"); // hole Verweis-Link aus dem Attribut
+            verweis_arr.push(verweis); // packs in den den Verweis_Array
+            verweis_link_arr.push(verweis_link); // dito
+        });
+        for (i=0; i<verweis_arr.length; i++) { // Handler: schreiben und in einen Array pushen
+            para3 = "<script>$('#" + verweis_link_arr[i] + "').click(function () {getArticle('" + verweis_link_arr[i] + "');});</script>";
+            skript_arr[i] = para3;
+        };
+        for (i=0; i<verweis_arr.length; i++) { // Verweise umbauen
+            verweis_arr[i] = "<span id='" + verweis_link_arr[i] + "' style='text-decoration: underline;'>" + verweis_arr[i] + "</span>";
+        }
+        bedeutung_text = '' // alles neu zusammenbauen
+        for (i=0; i<text_arr.length; i++) {
+            if (verweis_arr[i] == null) {
+                verweis_arr[i] = '';
+            }
+            bedeutung_text = bedeutung_text + text_arr[i] + verweis_arr[i];
+        }
+        for (i=0; i<skript_arr.length; i++) {
+            bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
+        }
+        bedeutung_text = bedeutung_text + '<br/>';
+        console.log(bedeutung_text);
+        bedeutung_text_arr.push(bedeutung_text); // pushe sie in eine Array der alle einzelnen Absätze enthält
     });
-    $(bedeutung).find('verweis').each(function () { // hole Verweis-Nodes
-        verweis = $(this).text(); // hole Verweis
-        verweis_link = $(this).attr("idref"); // hole Verweis-Link aus dem Attribut
-        verweis_arr.push(verweis); // packs in den den Verweis_Array
-        verweis_link_arr.push(verweis_link); // dito
-    });
-    for (i=0; i<verweis_arr.length; i++) { // Handler: schreiben und in einen Array pushen
-        para3 = "<script>$('#" + verweis_link_arr[i] + "').click(function () {getArticle('" + verweis_link_arr[i] + "');});</script>";
-        skript_arr[i] = para3;
-    };
-    for (i=0; i<verweis_arr.length; i++) { // Verweise umbauen
-        verweis_arr[i] = "<span id='" + verweis_link_arr[i] + "' style='text-decoration: underline;'>" + verweis_arr[i] + "</span>";
+    
+    bedeutung_text = '';
+    for (i=0; i<bedeutung_text_arr.length; i++) { // baue alle einzelnen Absätze zusammen
+        bedeutung_text = bedeutung_text + bedeutung_text_arr[i];
     }
-    bedeutung_text = '' // alles neu zusammenbauen
-    for (i=0; i<text_arr.length; i++) {
-        bedeutung_text = bedeutung_text + text_arr[i] + verweis_arr[i];
-    }
-    for (i=0; i<skript_arr.length; i++) {
-        bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
-    }
-    console.log(bedeutung_text);
-    return bedeutung_text;
+    return bedeutung_text; // returne die zusammengesetzte Bedeutung
 }
 function parseXML(xml, parameter) {
     var alle_artikel = $(xml).find('artikel');
@@ -65,12 +81,13 @@ function parseXML(xml, parameter) {
         var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3;
         artikel = $(this);
         lemma = $(artikel).find('lemma').text();
-        l_zusatz = $(artikel).find('l_zusatz').text();
         id = $(artikel).attr('id');
-        absatz = $(artikel).find('absatz');
-        abbildung_src = $(artikel).find('abbildung').attr('src');
+        //absatz = $(artikel).find('absatz');
         if (lemma === parameter || id === parameter) {
-            bedeutung_text = bedeutungUmsetzungDiv(absatz);
+            bedeutung = $(artikel).find('bedeutung');
+            abbildung_src = $(artikel).find('abbildung').attr('src');
+            l_zusatz = $(artikel).find('l_zusatz').text();
+            bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
@@ -311,15 +328,15 @@ $('#button_comment').click(function () {
 });
 function saveComment() {
     var id, comment_new, comments_array;
-    id = $('#id').html();
-    comments_array = store.get(id);
-    comment_new = $('#comments_textarea').val();
-    if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') {
-        comments_array[0] = comment_new;
+    id = $('#id').html(); // hol die ID
+    comments_array = store.get(id); // hol die bisherigen Kommentare
+    comment_new = $('#comments_textarea').val();  // das ist der Inhalt, der jetzt als comment angelegt werden soll
+    if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') { // falls bisher keiner da ist...
+        comments_array[0] = comment_new; // ... setze den Inhalt
     } else {
-        comments_array.push(comment_new);
+        comments_array.push(comment_new); // ansonsten pack den Inhalt hinten ran
     }
-    store.set(id, comments_array);
+    store.set(id, comments_array); // speicher alles
     $('#popup_comment_new_note').css('display', 'none');
     $('#popup_comment').css('display', 'block');
     showComment();                                          //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
