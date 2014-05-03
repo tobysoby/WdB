@@ -65,7 +65,7 @@ function bedeutungUmsetzungDiv (bedeutung) { // Verweise werden nicht durch Link
             bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
         }
         bedeutung_text = bedeutung_text + '<br/>';
-        console.log(bedeutung_text);
+        //console.log(bedeutung_text);
         bedeutung_text_arr.push(bedeutung_text); // pushe sie in eine Array der alle einzelnen Absätze enthält
     });
     
@@ -294,21 +294,33 @@ $('.history').click(function () {
 
 //Comments
 function showComment() {
-    var id, comments_array, html, i;
+    var id, comments_array, html, i, comment_html;
     id = $('#id').html();                                   //was ist die ID des aktuellen Artikels?
-    comments_array = store.get(id);                               //gibt es hierzu schon Kommentare im local stprage?
+    comments_array = store.get(id);                               //gibt es hierzu schon Kommentare im local storage?
     if (comments_array == null) {                                 //wenn nicht...
         comments_array = new Array();                             //... leg einen neuen Array an
         comments_array[0] = 'Bisher wurde kein Kommentar angelegt.';
         $('#comment_list').html('<li>' + comments_array[0] + '</li>');  //...schreib das hin
         store.set(id, comments_array);                            //Und speicher den neuen Comment-Array (wichtig für saveComment).
     } else {                                                //gibts einen ...
-        $('#comment_list').html(html + '<li>' + comments_array[0] + '</li><br/>');
-        for (i = 1; i < comments_array.length; i++) {             //... geh den durch und addiere alle htmls
-            $('<li></li>').html(comments_array[i]).appendTo('#comment_list');
+        //$('#comment_list').html(html + '<li>' + comments_array[0] + '</li><br/>');
+        $('#comment_list').empty();
+        for (i = 0; i < comments_array.length; i++) {             //... geh den durch und addiere alle htmls
+            
+            comment_html = '<span id="comm' + i + '">' + comments_array[i] + '</span><script>$("#comm' + i + '").click(function () {changeComment("' + comments_array[i] + '","' + i + '") });</script>'; // macht die einzelnen Kommentare klickbar.
+            
+            $('<li></li>').html(comment_html).appendTo('#comment_list');
         }
     }
 }
+
+function changeComment (comment, comment_id) { // ist eigentlich ganz einfach: übernimm den Inhalt des Kommentars und setze ihne als neuen Wert des Input-Feldes.
+    $('#popup_comment').css('display', 'none');
+    $('#popup_comment_new_note').css('display', 'block');
+    $('#comments_textarea').val(comment);
+    $('#comment_id').text(comment_id);
+}
+
 $('#button_comment').click(function () {
     var para1, para2;
     para1 = $('#popup_comment').css('display');
@@ -327,21 +339,28 @@ $('#button_comment').click(function () {
     //closeAllPopups();
 });
 function saveComment() {
-    var id, comment_new, comments_array;
+    var id, comment_new, comments_array, comment_id;
     id = $('#id').html(); // hol die ID
     comments_array = store.get(id); // hol die bisherigen Kommentare
     comment_new = $('#comments_textarea').val();  // das ist der Inhalt, der jetzt als comment angelegt werden soll
-    if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') { // falls bisher keiner da ist...
-        comments_array[0] = comment_new; // ... setze den Inhalt
+    comment_id = $('#comment_id').html(); // soll ein Comment geändert werden, dann ist das die Stell im Array
+    $('#comment_id').html(''); // und sicherheitshalber wieder leer machen.
+    if (comment_id == '') {
+        if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') { // falls bisher keiner da ist...
+            comments_array[0] = comment_new; // ... setze den Inhalt
+        } else {
+            comments_array.push(comment_new); // ansonsten pack den Inhalt hinten ran
+        }                                        
     } else {
-        comments_array.push(comment_new); // ansonsten pack den Inhalt hinten ran
+        comments_array[comment_id] = comment_new;
     }
     store.set(id, comments_array); // speicher alles
     $('#popup_comment_new_note').css('display', 'none');
     $('#popup_comment').css('display', 'block');
-    showComment();                                          //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
+    showComment();  //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
 }
 $('#add_comment_button').click(function () {
+    $('#comments_textarea').val('')
     $('#popup_comment').css('display', 'none');
     $('#popup_comment_new_note').css('display', 'block');
 });

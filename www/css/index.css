@@ -350,6 +350,7 @@ background-image: url(img/bookmark_pressed.png);
 }
 
 #bedeutung {
+    -webkit-user-select: text;
 }
 
 #abbildung {
@@ -397,6 +398,10 @@ background-image: url(img/bookmark_pressed.png);
     width:300px;
     margin: auto;
     display: block;
+}
+
+#comment_it {
+    display: none;
 }
 
 #add_comment_button, #save_comment_button {
