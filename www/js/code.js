@@ -359,6 +359,17 @@ function saveComment() {
     $('#popup_comment').css('display', 'block');
     showComment();  //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
 }
+function deleteComment() {
+    var id, comment_id, comments_array;
+    id = $('#id').html();
+    comment_id = $('#comment_id').html();
+    comments_array = store.get(id);
+    comments_array.splice(comment_id, 1);
+    store.set(id, comments_array); // speicher alles
+    $('#popup_comment_new_note').css('display', 'none');
+    $('#popup_comment').css('display', 'block');
+    showComment();  //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
+}
 $('#add_comment_button').click(function () {
     $('#comments_textarea').val('')
     $('#popup_comment').css('display', 'none');
@@ -366,6 +377,9 @@ $('#add_comment_button').click(function () {
 });
 $('#save_comment_button').click(function () {
     saveComment();
+});
+$('#delete_comment_button').click(function () {
+    deleteComment();
 });
 
 //Wenn man irgendwo hinklickt
