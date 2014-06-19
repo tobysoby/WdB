@@ -350,6 +350,7 @@ background-image: url(img/bookmark_pressed.png);
 }
 
 #bedeutung {
+    -webkit-touch-callout: default;
     -webkit-user-select: text;
 }
 
@@ -364,7 +365,7 @@ background-image: url(img/bookmark_pressed.png);
     font-style: italic;
 }
 
-.popup_categories, .popup_bookmarks, .popup_history {
+.popup_categories, .popup_bookmarks, .popup_history, .popup_highlighting {
     display: none;
     width: 100px;
     height: 150px;
@@ -450,6 +451,6 @@ background-image: url(img/bookmark_pressed.png);
     
 }
 
-.high {
+.highlight {
     background-color: yellow;
 }

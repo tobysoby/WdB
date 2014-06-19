@@ -39,7 +39,6 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-ui.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/wysihtml5.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-2.1.0.min.js \
-/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/cordova.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-1.11.0.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/LICENSE.txt \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/SourceSansPro-BlackIt.otf \
@@ -118,10 +117,17 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/index.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery.ui.autocomplete.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/store+json2.min.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-ui.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/wysihtml5.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-2.1.0.min.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/jquery-1.11.0.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-selectionsaverestore.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-serializer.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-cssclassapplier.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-textrange.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-highlighter.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/js/rangy/rangy-core.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res/screen \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res/icon \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res/screen/ios \

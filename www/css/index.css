@@ -350,6 +350,7 @@ background-image: url(img/bookmark_pressed.png);
 }
 
 #bedeutung {
+    -webkit-touch-callout: default;
     -webkit-user-select: text;
 }
 

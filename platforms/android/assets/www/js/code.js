@@ -87,7 +87,10 @@ function parseXML(xml, parameter) {
             bedeutung = $(artikel).find('bedeutung');
             abbildung_src = $(artikel).find('abbildung').attr('src');
             l_zusatz = $(artikel).find('l_zusatz').text();
-            bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
+            var high_id = id + '_high'; // baue die high_id
+            var high = store.get(high_id); // hole den eventuell gehilightete Text
+            if (high) bedeutung_text = high; // ist er gehighlightet (ist etwas im local storage), dann nimm ihn
+            else {bedeutung_text = bedeutungUmsetzungDiv(bedeutung)}; // wenn nicht, mach die Umsetzung
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
@@ -107,67 +110,57 @@ function getArticle(parameter) {
 }
 
 //Highlighting
-function highlightText (zuHighlighten, parameter) {
-    $(document).ready(function () {
-        $.ajax({
-            type: "GET",
-            url: "src/data.xml",
-            dataType: "xml",
-            success: function (xml) {
-                var alle_artikel = $(xml).find('artikel');
-                $(alle_artikel).each(function () {
-                    var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3;
-                    var high_id;
-                    var high_array;
-                    artikel = $(this);
-                    lemma = $(artikel).find('lemma').text();
-                    id = $(artikel).attr('id');
-                    if (lemma === parameter || id === parameter) {
-                        bedeutung = $(artikel).find('bedeutung');
-                        abbildung_src = $(artikel).find('abbildung').attr('src');
-                        l_zusatz = $(artikel).find('l_zusatz').text();
-                        bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
-                        //Highlighten
-                        bedeutung_text = bedeutung_text.replace(zuHighlighten, '<span class="high">' + zuHighlighten + '</span>');
-                        var high_id = id + '_high';
-                        //console.log(high_id);
-                        //high_array = window.localStorage.getItem(high_id);
-                        high_array = store.get(high_id);
-                        high_array.push(zuHighlighten);
-                        store.set(high_id, high_array);
-                        //
-                        showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-                    }
-                });
-            }
-        });
-    });
-}
-$('.highlight').click(function () {
-    var id = $('#id').html();
-    var zuHighlighten = document.getSelection();
-    highlightText(zuHighlighten, id);
+/*$('.print').click(function () {
+    $('.popup_highlighting').css('display', 'block');
 });
 
-function checkHighlighting (id, bedeutung_text) {
-    var high_id, high_array, i;
-    high_id = id + '_high';
-    high_array = store.get(high_id);
-    if (high_array == null) {
-        high_array = new Array ();
-        high_array[0] = 'bisher nix.';
-        store.set(high_id, high_array);
-    } else {
-        for (i=0; i<high_array-length; i++) {
-            bedeutung_text = bedeutung_text.replace(high_array[i], '<span class="high">' + high_array[i] + '</span>');
-        }
-    }
-    return bedeutung_text;
+*/
+function saveHighlight (textMitHighlights) {
+    var high_id = $('#id').html(); // hole die aktuelle ID
+    high_id = high_id + '_high'; // baue die high_id
+    store.set(high_id, textMitHighlights);
+};
+
+var highlighter;
+
+function rangy_init () {
+            rangy.init();
+
+            highlighter = rangy.createHighlighter();
+
+            highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
+                ignoreWhiteSpace: true,
+                tagNames: ["span", "a"]
+            }));
+
+            highlighter.addClassApplier(rangy.createCssClassApplier("note", {
+                ignoreWhiteSpace: true,
+                elementTagName: "a",
+                elementProperties: {
+                    href: "#",
+                    onclick: function() {
+                        var highlight = highlighter.getHighlightForElement(this);
+                        if (window.confirm("Delete this note (ID " + highlight.id + ")?")) {
+                            highlighter.removeHighlights( [highlight] );
+                        }
+                        return false;
+                    }
+                }
+            }));
 }
 
+window.onload = rangy_init();
 
+function noteSelectedText() {
+    highlighter.highlightSelection("highlight");
+    var highlightedText = $('#bedeutung').html();
+    highlightedText = highlightedText.toString();
+    saveHighlight(highlightedText);
+}
 
-
+$('.print').click(function () {
+    noteSelectedText();
+});
 
 //Artikel suchen
 function artikelSuchen() {
@@ -205,7 +198,6 @@ var showArticle = function (id, lemma, l_zusatz, bedeutung_text, abbildung_src) 
     $('#lemma').text(lemma);
     $('#lemmazusatz').text(l_zusatz);
     $('#bedeutung').empty();
-    bedeutung_text = checkHighlighting (id, bedeutung_text);
     $('#bedeutung').html(bedeutung_text);
     $('#id').text(id);
     addToHistory(lemma);
@@ -454,6 +446,7 @@ function closeAllPopups(aktuell) {
     $('.popup_categories').css('display', 'none');
     $('.popup_bookmarks').css('display', 'none');
     $('.popup_history').css('display', 'none');
+    $('.popup_highlighting').css('display', 'none');
     $('#popup_comment').css('display', 'none');
     $('#popup_comment_new_note').css('display', 'none');
     $(aktuell).css('display', 'block');
