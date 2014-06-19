@@ -364,7 +364,7 @@ background-image: url(img/bookmark_pressed.png);
     font-style: italic;
 }
 
-.popup_categories, .popup_bookmarks, .popup_history {
+.popup_categories, .popup_bookmarks, .popup_history, .popup_highlighting {
     display: none;
     width: 100px;
     height: 150px;
@@ -400,7 +400,7 @@ background-image: url(img/bookmark_pressed.png);
     display: block;
 }
 
-#comment_it {
+#comment_id {
     display: none;
 }
 
@@ -448,4 +448,8 @@ background-image: url(img/bookmark_pressed.png);
     width: 250px;
     display: block;
     
+}
+
+.highlight {
+    background-color: yellow;
 }

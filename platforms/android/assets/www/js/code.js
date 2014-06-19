@@ -27,107 +27,71 @@ function bedeutungUmsetzung(bedeutung) {
 }
 
 function bedeutungUmsetzungDiv (bedeutung) { // Verweise werden nicht durch Links ersetzt, sondern durch spans mit ids, die können dann mit einer click-Funktion aktiviert werden.
-    var verweis, verweis_link, para1, para2, para3, i, text, bedeutung_text;
-    var verweis_link_arr = new Array ();
-    var verweis_arr = new Array ();
-    var text_arr = new Array ();
+    var verweis, verweis_link, para1, para2, para3, i, text, bedeutung_text, absatz;
     var skript_arr = new Array ();
-    $(bedeutung).find('text').each(function () {
-        text = $(this).text();
-        text_arr.push(text);
+    var bedeutung_text_arr = new Array ();
+    
+    $(bedeutung).find('absatz').each(function () { // für jeden Absatz in der Bedeutung
+        var verweis_link_arr = new Array (); // die Arrays müssen für jeden Absatz neu gesetzt werden, sonst sind noch Reste drin die später wieder mit ausgegeben werden
+        var verweis_arr = new Array ();
+        var text_arr = new Array ();
+        absatz = $(this);
+        bedeutung_text = '';
+        $(absatz).find('text').each(function () { // hole die Text-Nodes
+            text = $(this).text(); // Text aus Text-Nodes
+            text_arr.push(text); // packs in das Text_Array
+        });
+        $(absatz).find('verweis').each(function () { // hole Verweis-Nodes
+            verweis = $(this).text(); // hole Verweis
+            verweis_link = $(this).attr("idref"); // hole Verweis-Link aus dem Attribut
+            verweis_arr.push(verweis); // packs in den den Verweis_Array
+            verweis_link_arr.push(verweis_link); // dito
+        });
+        for (i=0; i<verweis_arr.length; i++) { // Handler: schreiben und in einen Array pushen
+            para3 = "<script>$('#" + verweis_link_arr[i] + "').click(function () {getArticle('" + verweis_link_arr[i] + "');});</script>";
+            skript_arr[i] = para3;
+        };
+        for (i=0; i<verweis_arr.length; i++) { // Verweise umbauen
+            verweis_arr[i] = "<span id='" + verweis_link_arr[i] + "' style='text-decoration: underline;'>" + verweis_arr[i] + "</span>";
+        }
+        bedeutung_text = '' // alles neu zusammenbauen
+        for (i=0; i<text_arr.length; i++) {
+            if (verweis_arr[i] == null) {
+                verweis_arr[i] = '';
+            }
+            bedeutung_text = bedeutung_text + text_arr[i] + verweis_arr[i];
+        }
+        for (i=0; i<skript_arr.length; i++) {
+            bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
+        }
+        bedeutung_text = bedeutung_text + '<br/>';
+        //console.log(bedeutung_text);
+        bedeutung_text_arr.push(bedeutung_text); // pushe sie in eine Array der alle einzelnen Absätze enthält
     });
-    $(bedeutung).find('verweis').each(function () {
-        verweis = $(this).text();
-        verweis_link = $(this).attr("idref");
-        verweis_arr.push(verweis);
-        verweis_link_arr.push(verweis_link);
-        //para1 = "<span id='" + verweis_link + "' style='text-decoration: underline;'>" + verweis + "</span>";
-        //para2 = $(this);
-        //$(para2).replaceWith(para1);
-    });
-    for (i=0; i<verweis_arr.length; i++) {
-        para3 = "<script>$('#" + verweis_link_arr[i] + "').click(function () {getArticle('" + verweis_link_arr[i] + "');});</script>";
-        //$(para3).appendTo(bedeutung_text);
-        skript_arr[i] = para3;
-    };
-    for (i=0; i<verweis_arr.length; i++) {
-        verweis_arr[i] = "<span id='" + verweis_link_arr[i] + "' style='text-decoration: underline;'>" + verweis_arr[i] + "</span>";
+    
+    bedeutung_text = '';
+    for (i=0; i<bedeutung_text_arr.length; i++) { // baue alle einzelnen Absätze zusammen
+        bedeutung_text = bedeutung_text + bedeutung_text_arr[i];
     }
-    bedeutung_text = ''
-    for (i=0; i<text_arr.length; i++) {
-        bedeutung_text = bedeutung_text + text_arr[i] + verweis_arr[i];
-    }
-    console.log(bedeutung_text);
-    for (i=0; i<skript_arr.length; i++) {
-        bedeutung_text = bedeutung_text + '<div>' + skript_arr[i] + '</div>';
-    }
-    console.log(bedeutung_text);
-    //bedeutung_text = bedeutung_text.html();
-    //console.log(bedeutung_text);
-    //bedeutung_text = String(bedeutung_text);
-    //console.log(bedeutung_text)
-    return bedeutung_text;
+    return bedeutung_text; // returne die zusammengesetzte Bedeutung
 }
-
-function bedeutungUmsetzungString (bedeutung) {
-    var bedeutung_text, verweis, verweis_link, alt, neu, para3;
-    var verweis_arr = new Array ();
-    bedeutung_text = bedeutung.html();
-    //console.log(bedeutung_text);
-    $(bedeutung).find('verweis').each(function () {
-        verweis = $(this).text();
-        verweis_link = $(this).attr("idref");
-        verweis_arr.push(verweis_link);
-        alt = '<verweis idref="' + verweis_link + '">' + verweis + '</verweis>';
-        neu = "<span id='" + verweis_link + "' style='text-decoration: underline;'>" + verweis + "</span>"
-        bedeutung_text = bedeutung_text.replace(alt, neu);
-    });
-    /*for (i=0; i<verweis_arr.length; i++) {
-        para3 = "<script>$('#" + verweis_arr[i] + "').click(function () {getArticle('" + verweis_arr[i] + "');});</script>";
-        $(para3).appendTo(bedeutung_text);
-    };*/
-    return bedeutung_text;
-}
-
 function parseXML(xml, parameter) {
     var alle_artikel = $(xml).find('artikel');
     $(alle_artikel).each(function () {
         var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3;
         artikel = $(this);
         lemma = $(artikel).find('lemma').text();
-        l_zusatz = $(artikel).find('l_zusatz').text();
         id = $(artikel).attr('id');
-        absatz = $(artikel).find('absatz');
-        //bedeutung = $(artikel).find('bedeutung');
-        abbildung_src = $(artikel).find('abbildung').attr('src');
-        //bedeutung_text = bedeutung.text(); //auffem Tablet funkts nur mit reinem Text -> bedeutungUmsetzung baut Links ein.
+        //absatz = $(artikel).find('absatz');
         if (lemma === parameter || id === parameter) {
-            bedeutung_text = bedeutungUmsetzungDiv(absatz);
-            //console.log(bedeutung_text);
-            //bedeutung_text = bedeutung_text[0].innerHTML;
-            //console.log(bedeutung_text);
+            bedeutung = $(artikel).find('bedeutung');
+            abbildung_src = $(artikel).find('abbildung').attr('src');
+            l_zusatz = $(artikel).find('l_zusatz').text();
+            bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
 }
-
-/*function parseXML(xml, parameter) {
-    var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3, i;
-    var parser=new DOMParser();
-    var xmlDoc=parser.parseFromString(xml,"text/xml");
-    for (i=0; i<641; i++) {
-        artikel = xmlDoc.getElementsByTagName("artikel")[i];
-        id = artikel.getAttribute("id");
-        lemma = artikel.getElementsByTagName("lemma")[0].childNodes[0].nodeValue;
-        if (lemma === parameter || id === parameter) {
-            l_zusatz = artikel.getElementsByTagName("l_zusatz")[0].childNodes[0].nodeValue;
-            absatz = artikel.getElementsByTagName("absatz")[0].childNodes[0].nodeValue;
-            abbildung_src = artikel.getElementsByTagName("abbildung")[0].getAttribute("src");
-            bedeutung_text = bedeutungUmsetzungDiv(absatz);
-            showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
-        }
-    }
-}*/
 
 function getArticle(parameter) {
     $(document).ready(function () {
@@ -141,6 +105,69 @@ function getArticle(parameter) {
         });
     });
 }
+
+//Highlighting
+function highlightText (zuHighlighten, parameter) {
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "src/data.xml",
+            dataType: "xml",
+            success: function (xml) {
+                var alle_artikel = $(xml).find('artikel');
+                $(alle_artikel).each(function () {
+                    var artikel, lemma, id, absatz, bedeutung, bedeutung_text, bedeutung_text_2, abbildung_src, l_zusatz, para2, verweis, verweis_link, test, para3;
+                    var high_id;
+                    var high_array;
+                    artikel = $(this);
+                    lemma = $(artikel).find('lemma').text();
+                    id = $(artikel).attr('id');
+                    if (lemma === parameter || id === parameter) {
+                        bedeutung = $(artikel).find('bedeutung');
+                        abbildung_src = $(artikel).find('abbildung').attr('src');
+                        l_zusatz = $(artikel).find('l_zusatz').text();
+                        bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
+                        //Highlighten
+                        bedeutung_text = bedeutung_text.replace(zuHighlighten, '<span class="high">' + zuHighlighten + '</span>');
+                        var high_id = id + '_high';
+                        //console.log(high_id);
+                        //high_array = window.localStorage.getItem(high_id);
+                        high_array = store.get(high_id);
+                        high_array.push(zuHighlighten);
+                        store.set(high_id, high_array);
+                        //
+                        showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
+                    }
+                });
+            }
+        });
+    });
+}
+$('.highlight').click(function () {
+    var id = $('#id').html();
+    var zuHighlighten = document.getSelection();
+    highlightText(zuHighlighten, id);
+});
+
+function checkHighlighting (id, bedeutung_text) {
+    var high_id, high_array, i;
+    high_id = id + '_high';
+    high_array = store.get(high_id);
+    if (high_array == null) {
+        high_array = new Array ();
+        high_array[0] = 'bisher nix.';
+        store.set(high_id, high_array);
+    } else {
+        for (i=0; i<high_array-length; i++) {
+            bedeutung_text = bedeutung_text.replace(high_array[i], '<span class="high">' + high_array[i] + '</span>');
+        }
+    }
+    return bedeutung_text;
+}
+
+
+
+
 
 //Artikel suchen
 function artikelSuchen() {
@@ -178,6 +205,7 @@ var showArticle = function (id, lemma, l_zusatz, bedeutung_text, abbildung_src) 
     $('#lemma').text(lemma);
     $('#lemmazusatz').text(l_zusatz);
     $('#bedeutung').empty();
+    bedeutung_text = checkHighlighting (id, bedeutung_text);
     $('#bedeutung').html(bedeutung_text);
     $('#id').text(id);
     addToHistory(lemma);
@@ -330,21 +358,33 @@ $('.history').click(function () {
 
 //Comments
 function showComment() {
-    var id, comments_array, html, i;
+    var id, comments_array, html, i, comment_html;
     id = $('#id').html();                                   //was ist die ID des aktuellen Artikels?
-    comments_array = store.get(id);                               //gibt es hierzu schon Kommentare im local stprage?
+    comments_array = store.get(id);                               //gibt es hierzu schon Kommentare im local storage?
     if (comments_array == null) {                                 //wenn nicht...
         comments_array = new Array();                             //... leg einen neuen Array an
         comments_array[0] = 'Bisher wurde kein Kommentar angelegt.';
         $('#comment_list').html('<li>' + comments_array[0] + '</li>');  //...schreib das hin
         store.set(id, comments_array);                            //Und speicher den neuen Comment-Array (wichtig für saveComment).
     } else {                                                //gibts einen ...
-        $('#comment_list').html(html + '<li>' + comments_array[0] + '</li><br/>');
-        for (i = 1; i < comments_array.length; i++) {             //... geh den durch und addiere alle htmls
-            $('<li></li>').html(comments_array[i]).appendTo('#comment_list');
+        //$('#comment_list').html(html + '<li>' + comments_array[0] + '</li><br/>');
+        $('#comment_list').empty();
+        for (i = 0; i < comments_array.length; i++) {             //... geh den durch und addiere alle htmls
+            
+            comment_html = '<span id="comm' + i + '">' + comments_array[i] + '</span><script>$("#comm' + i + '").click(function () {changeComment("' + comments_array[i] + '","' + i + '") });</script>'; // macht die einzelnen Kommentare klickbar.
+            
+            $('<li></li>').html(comment_html).appendTo('#comment_list');
         }
     }
 }
+
+function changeComment (comment, comment_id) { // ist eigentlich ganz einfach: übernimm den Inhalt des Kommentars und setze ihne als neuen Wert des Input-Feldes.
+    $('#popup_comment').css('display', 'none');
+    $('#popup_comment_new_note').css('display', 'block');
+    $('#comments_textarea').val(comment);
+    $('#comment_id').text(comment_id);
+}
+
 $('#button_comment').click(function () {
     var para1, para2;
     para1 = $('#popup_comment').css('display');
@@ -363,26 +403,47 @@ $('#button_comment').click(function () {
     //closeAllPopups();
 });
 function saveComment() {
-    var id, comment_new, comments_array;
-    id = $('#id').html();
-    comments_array = store.get(id);
-    comment_new = $('#comments_textarea').val();
-    if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') {
-        comments_array[0] = comment_new;
+    var id, comment_new, comments_array, comment_id;
+    id = $('#id').html(); // hol die ID
+    comments_array = store.get(id); // hol die bisherigen Kommentare
+    comment_new = $('#comments_textarea').val();  // das ist der Inhalt, der jetzt als comment angelegt werden soll
+    comment_id = $('#comment_id').html(); // soll ein Comment geändert werden, dann ist das die Stell im Array
+    $('#comment_id').html(''); // und sicherheitshalber wieder leer machen.
+    if (comment_id == '') {
+        if (comments_array[0] == 'Bisher wurde kein Kommentar angelegt.') { // falls bisher keiner da ist...
+            comments_array[0] = comment_new; // ... setze den Inhalt
+        } else {
+            comments_array.push(comment_new); // ansonsten pack den Inhalt hinten ran
+        }                                        
     } else {
-        comments_array.push(comment_new);
+        comments_array[comment_id] = comment_new;
     }
-    store.set(id, comments_array);
+    store.set(id, comments_array); // speicher alles
     $('#popup_comment_new_note').css('display', 'none');
     $('#popup_comment').css('display', 'block');
-    showComment();                                          //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
+    showComment();  //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
+}
+function deleteComment() {
+    var id, comment_id, comments_array;
+    id = $('#id').html();
+    comment_id = $('#comment_id').html();
+    comments_array = store.get(id);
+    comments_array.splice(comment_id, 1);
+    store.set(id, comments_array); // speicher alles
+    $('#popup_comment_new_note').css('display', 'none');
+    $('#popup_comment').css('display', 'block');
+    showComment();  //geh zurück zu den Comments. (Aufruf von showComment, weil hierdurch alles neu geladen wird.)
 }
 $('#add_comment_button').click(function () {
+    $('#comments_textarea').val('')
     $('#popup_comment').css('display', 'none');
     $('#popup_comment_new_note').css('display', 'block');
 });
 $('#save_comment_button').click(function () {
     saveComment();
+});
+$('#delete_comment_button').click(function () {
+    deleteComment();
 });
 
 //Wenn man irgendwo hinklickt

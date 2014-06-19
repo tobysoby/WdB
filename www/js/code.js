@@ -87,7 +87,10 @@ function parseXML(xml, parameter) {
             bedeutung = $(artikel).find('bedeutung');
             abbildung_src = $(artikel).find('abbildung').attr('src');
             l_zusatz = $(artikel).find('l_zusatz').text();
-            bedeutung_text = bedeutungUmsetzungDiv(bedeutung);
+            var high_id = id + '_high'; // baue die high_id
+            var high = store.get(high_id); // hole den eventuell gehilightete Text
+            if (high) bedeutung_text = high; // ist er gehighlightet (ist etwas im local storage), dann nimm ihn
+            else {bedeutung_text = bedeutungUmsetzungDiv(bedeutung)}; // wenn nicht, mach die Umsetzung
             showArticle(id, lemma, l_zusatz, bedeutung_text, abbildung_src);
         }
     });
@@ -105,6 +108,59 @@ function getArticle(parameter) {
         });
     });
 }
+
+//Highlighting
+/*$('.print').click(function () {
+    $('.popup_highlighting').css('display', 'block');
+});
+
+*/
+function saveHighlight (textMitHighlights) {
+    var high_id = $('#id').html(); // hole die aktuelle ID
+    high_id = high_id + '_high'; // baue die high_id
+    store.set(high_id, textMitHighlights);
+};
+
+var highlighter;
+
+function rangy_init () {
+            rangy.init();
+
+            highlighter = rangy.createHighlighter();
+
+            highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
+                ignoreWhiteSpace: true,
+                tagNames: ["span", "a"]
+            }));
+
+            highlighter.addClassApplier(rangy.createCssClassApplier("note", {
+                ignoreWhiteSpace: true,
+                elementTagName: "a",
+                elementProperties: {
+                    href: "#",
+                    onclick: function() {
+                        var highlight = highlighter.getHighlightForElement(this);
+                        if (window.confirm("Delete this note (ID " + highlight.id + ")?")) {
+                            highlighter.removeHighlights( [highlight] );
+                        }
+                        return false;
+                    }
+                }
+            }));
+}
+
+window.onload = rangy_init();
+
+function noteSelectedText() {
+    highlighter.highlightSelection("highlight");
+    var highlightedText = $('#bedeutung').html();
+    highlightedText = highlightedText.toString();
+    saveHighlight(highlightedText);
+}
+
+$('.print').click(function () {
+    noteSelectedText();
+});
 
 //Artikel suchen
 function artikelSuchen() {
@@ -390,6 +446,7 @@ function closeAllPopups(aktuell) {
     $('.popup_categories').css('display', 'none');
     $('.popup_bookmarks').css('display', 'none');
     $('.popup_history').css('display', 'none');
+    $('.popup_highlighting').css('display', 'none');
     $('#popup_comment').css('display', 'none');
     $('#popup_comment_new_note').css('display', 'none');
     $(aktuell).css('display', 'block');

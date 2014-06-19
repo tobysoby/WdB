@@ -25,6 +25,7 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Wörterbuch des Buches</title>
+        
     </head>
     <body>
         <div class="app">
@@ -68,7 +69,7 @@
             <li>
                 <a class="graph" href=# ></a></li>
                 <li>
-                <a class="print" href=# ></a></li>
+                <a class="print" href=# ><ul class='popup_highlighting'><div id='highlight'>Highlight!</div></ul></a></li>
                 <li>
                 <a id="button_comment" class="comment" href=# ></a></li>
                 </ul>
@@ -95,6 +96,12 @@
         <script type="text/javascript" src="js/jquery-ui.js"></script>
         <script type="text/javascript" src="js/jquery.ui.autocomplete.js"></script>
         <script type="text/javascript" src="js/store+json2.min.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-core.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-cssclassapplier.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-highlighter.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-selectionsaverestore.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-textrange.js"></script>
+        <script type="text/javascript" src="js/rangy/rangy-serializer.js"></script>
         <script type="text/javascript" src="js/code.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">

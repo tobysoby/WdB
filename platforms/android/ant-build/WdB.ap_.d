@@ -13,6 +13,7 @@
 /home/tobias/Development/WdB/WdB/platforms/android/ant-build/res/drawable-hdpi/icon.png \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/_where-is-www.txt \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/spec \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/cordova_plugins.js \
@@ -27,6 +28,19 @@
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/res \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/config.xml \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/icon.png \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/index.html \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/code.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery.mobile-1.4.2.min.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/advanced.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/index.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery.ui.autocomplete.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/store+json2.min.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-ui.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/wysihtml5.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-2.1.0.min.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/cordova.js \
+/home/tobias/Development/WdB/WdB/platforms/android/assets/www/test/js/jquery-1.11.0.js \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/LICENSE.txt \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/SourceSansPro-BlackIt.otf \
 /home/tobias/Development/WdB/WdB/platforms/android/assets/www/font/SourceSansPro-BoldIt.otf \
